@@ -1,0 +1,4 @@
+- download and install an obsidian desktop app on your windows pc
+- initialize an github repo as your remote vault for obsidian
+- add a plugin called Git in obsidian plugin store and set the auto commit and pull on startup, enabling basic automation.
+- write down this first note, waiting for one minutes, and then it'll be pushed.
