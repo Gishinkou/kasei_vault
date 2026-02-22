@@ -1,0 +1,15 @@
+- Make sure Obsidian Git is on latest version, push that change if update was necessary
+- Install Obsidian for Android
+- Create a new vault (or point Obsidian to an empty directory)
+- Create a personal access token with repo scope on GitHub
+- In Obsidian settings, enable community plugins/install Obsidian Git
+- Enable Obsidian Git (on the same screen)
+- Go to Options for the plugin
+- Fill in username `__token__`
+- Fill in the personal access token as password
+- Leave the relative path setting empty (for advanced users only)
+- Exit plugin settings, open command palette, choose "Clone existing remote repo"
+- Fill in repo URL in the text field, press the repo URL button below it
+- Follow instructions (leave paths empty once again)
+- Clone should start (popup notifications), leave the screen on until a popup says "Restart Obsidian" 🎉
+- Fill in user/pass again in the plugin settings, as the clone overwrites the workspace
