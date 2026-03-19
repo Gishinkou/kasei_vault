@@ -1,2 +1,0 @@
-- I'd like to `coin the phrase` "tickle-down diplomacy"
-- 
