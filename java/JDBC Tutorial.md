@@ -11,3 +11,18 @@ stmt.executeUpdate('INSERT INTO COFFEES VALUES ('italy', 49)');
 stmt.executeUpdate('INSERT INTO COFFEES VALUES ('japan', 50)');
 ```
 
+## ResultSet
+
+```java
+ResultSet rs = stmt.executeQuery("SELECT COF_NAME, PRICE FROM COFFEES");
+```
+
+| COF_NAME | PRICE |
+|-----|----|
+|Colombian|7.99|
+|FrenchRost|8.99|
+注意以上表行有几个元素：
+1. 行 index
+2. 列 名称
+3. 列 index
+4. 行列 的 value
