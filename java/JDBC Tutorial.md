@@ -244,3 +244,25 @@ con.setAutoCommit(true);
 `executeBatch()`方法的异常：
 1. 中途某一条其实是`Query`（`SELECT`）
 2. 中途有一条失败了
+
+## generatedKeys —— update DML 也有 ResultSet
+
+`insert`语句返回的结果，带上生成的主键，是一个非常常见的需求。
+
+mybatis 帮我们封装了这个`ResultSet keys`的**获取和回填**的过程。
+
+但我们要清楚地意识到：当我们期待**回填**时，我们虽然执行的是`executeUpdate`，但我们同时要尝试获取`update`语义下的`ResultSet`。
+
+```java
+stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+// 还需要显式地取出 keys
+ResultSet keys = stmt.getGeneratedKeys();
+```
+
+
+## MetaData —— 中间件需要格外关注的一层
+
+- `DatabaseMetaData`：数据库系统（如 Mysql）的元数据，会决定一些**高级功能能不能用**
+- `ResultSetMetaData`：ORM框架需要格外关注的，决定了**数据的列名、数据类型等**
+- `ParameterMetaData`：专属于`PreparedStatement`，
