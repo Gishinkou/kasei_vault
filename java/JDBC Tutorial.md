@@ -211,5 +211,18 @@ Object invokeInTransaction(Method method, Object[] args) {
 }
 ```
 
-## ResultSet 高级 API—— multiquery
+## ResultSet 高级 API
+
+### executeBatch()
+
+本质上是把一批 SQL 一起执行
+```java
+con.setAutoCommit(false);
+Statement stmt = con.createStatement();
+stmt.addBatch("INSERT INTO COFFEES" VALUES ("japan, 49"));
+stmt.addBatch("INSERT INTO COFFEES" VALUES ("america, 50"));
+int[] updateCounts = stmt.executeBatch();
+con.commit();
+con.setAutoCommit(true);
+```
 
