@@ -60,3 +60,8 @@ rs.next();
 String s = rs.getString(1);
 float n = rs.getFloat(2);
 ```
+
+### JDBCType 和 SqlTYPE是等价的
+
+jdbcType 和`java.sql.Types`里的定义是完全等价的。
+
