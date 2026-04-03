@@ -89,6 +89,7 @@ jdbcType 和`java.sql.Types`里的定义是完全等价的。
 
 从上述过程可以看出，`preparedStatement`主要是通过`prepareStatement(sql)`方法，理论上会**触发一次服务器编译**，并将 `statement_id`存在内存中，作为下次访问的凭据。
 
+##### mysql 服务端的支持
 但究竟是不是这样呢？让我们看一下 Mysql 文章中的 PrepareStatement 章节是怎么写的 [Mysql官方文档 15.5preparedStatements](https://dev.mysql.com/doc/refman/8.4/en/sql-prepared-statements.html)
 
 >MySQL 8.4 provides support for server-side prepared statements. This support takes advantage of the efficient client/server binary protocol. Using prepared statements with placeholders for parameter values has the following benefits:
@@ -97,7 +98,16 @@ jdbcType 和`java.sql.Types`里的定义是完全等价的。
 
 文章中明确指出“server-side prepared statements”。这样做的好处有两点：1. 减少额外成本(overhead)，并且明确是"parsing statement"这种解析上的成本。2. 避免sql注入
 
+但这仍是 server 端的策略，具体行为其实是一个client 和 server 端协同的过程，让我们看一下 jdbc-mysql 的实现。
 
+##### jdbc-mysql 客户端驱动的实现
 
+查看[mysql connectors documentation 6.4 jdbc api implementation notes](https://dev.mysql.com/doc/connector-j/en/connector-j-reference-implementation-notes.html)，能看到mysql jdbc connector 的具体实现。
 
+`PreparedStatement`章节入口就有一句：`Two variants of prepared statements are implemented by Connector/J, the client-side and the server-side prepared statements. `后续的具体内容为：
 
+> Client-side prepared statements are used by default because early MySQL versions did not support the prepared statement feature or had problems with its implementation. Server-side prepared statements and binary-encoded result sets are used when the server supports them. To enable usage of server-side prepared statements, set `useServerPrepStmts=true`.
+
+从上述文本，可以知道， mysql 默认采取 `client-side` 的编译，高版本的 mysql 即使支持 `server-side`编译，也需要显式地打开配置，set `useServerPrepStmts=true`。
+
+因此，我们可以建立这样的心智模型： client 的 jdbc-mysql 默认带有 sql 编译能力，调用 `prepareStatement` 后，就能产生带有问号的语句，之后直接把该语句发送给 server，获取 `statement_id`，作为后续访问这个编译结果的凭据。
