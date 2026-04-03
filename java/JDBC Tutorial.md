@@ -95,7 +95,9 @@ jdbcType 和`java.sql.Types`里的定义是完全等价的。
 > - Less overhead for parsing the statement each time it is executed. Typically, database applications process large volumes of almost-identical statements, with only changes to literal or variable values in clauses such as `WHERE` for queries and deletes, `SET` for updates, and `VALUES` for inserts.
 > - Protection against SQL injection attacks. The parameter values can contain unescaped SQL quote and delimiter characters.
 
-文章中明确指出“server-side prepared statements”。这样做的好处有两点：1. 减少额外成本(overhead)，并且明确是"parsing statement"这种解析上的成本。
+文章中明确指出“server-side prepared statements”。这样做的好处有两点：1. 减少额外成本(overhead)，并且明确是"parsing statement"这种解析上的成本。2. 避免sql注入
+
+
 
 
 
