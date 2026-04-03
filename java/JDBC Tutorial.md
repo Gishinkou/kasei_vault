@@ -131,4 +131,20 @@ jdbcType 和`java.sql.Types`里的定义是完全等价的。
 2. 提交事务（`con.commit();`）
 3. 恢复自动提交 `con.setAutoCommit(true);`
 
-事务隔离等级，从客户端来看，其实就是一个连接的属性
+事务是否开启，事务隔离等级，从客户端来看，是一个 setter，但在一个"client-server connection"资源的层级，是一个“会话状态“。
+
+### 事务 setter 的工作实质——一条特殊 SQL
+
+注意以下“驱动可能立马发送”可能并不准确，具体实现中可能延迟到第一条SQL、可能幂等不触发重复发送。这些也是连接池实现需要考虑的问题，连接池需要“重置”连接状态，但“重置”连接状态是一个需要网络IO的事情，需要优化避免无意义的 `no-op`通过网络发送过去。
+```
+conn.setAutoCommit(false);
+驱动可能立马发送
+SET autocommit=0;
+```
+
+```
+conn.setTransactionIsolation(REPEATABLE_READ);
+驱动可能立即发送
+SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+```
+
