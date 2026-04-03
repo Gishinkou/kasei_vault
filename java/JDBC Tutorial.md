@@ -284,7 +284,10 @@ for (int i = 1; i <= numberOfColumns; i++) {
 }
 ```
 
-### DatabaseMetaData
+### DatabaseMetaData —— Connection 层的属性
+
+**获取方式： `connection.getMetaData();`**
+
 有 150 多个属性，代表着数据库支持的各种能力。有趣的是，可以从返回值类型，对其做 一些定性感知：
 - String 类型：通常是叙述性的，如 driver 类型，版本等
 - int 类型：通常是一些通信内容的上限，如最大列数，最大列字数等
