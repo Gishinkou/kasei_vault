@@ -289,3 +289,20 @@ for (int i = 1; i <= numberOfColumns; i++) {
 - String 类型：通常是叙述性的，如 driver 类型，版本等
 - int 类型：通常是一些通信内容的上限，如最大列数，最大列字数等
 - boolean 类型：通常是指服务器对一些高级功能是否支持。
+
+#### 基于jdbc层中间件的实际需求，梳理出一些 DatabaseMetaData API
+
+1. 命名规则与风格、关键字等：
+	1. 如驼峰、关键字 order 、col 的处理
+2. 数据库产品：
+	1. mysql 版本、driver 等，来决定方言
+3. 【最重要】表、列、主键、索引
+	1. `getTables`
+	2. `getColumns`
+	3. `getPrimaryKeys`
+	4. `getIndexInfo`
+	5. `getSchemas`
+4. 上述（表、列、主键、索引）的作用
+	1. 初始化时校验库表是否存在（DAL目前不支持的能力）
+	2. 判断某表有没有主键、索引
+	3. 合并结果时识别列信息
