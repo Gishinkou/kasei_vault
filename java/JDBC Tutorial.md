@@ -210,3 +210,6 @@ Object invokeInTransaction(Method method, Object[] args) {
     }
 }
 ```
+
+## ResultSet 高级 API—— multiquery
+
