@@ -265,4 +265,21 @@ ResultSet keys = stmt.getGeneratedKeys();
 
 - `DatabaseMetaData`：数据库系统（如 Mysql）的元数据，会决定一些**高级功能能不能用**
 - `ResultSetMetaData`：ORM框架需要格外关注的，决定了**数据的列名、数据类型等**
-- `ParameterMetaData`：专属于`PreparedStatement`，
+- `ParameterMetaData`：【这个几乎不用，因为参数类型在 java 侧已经知道，不需要从服务器求证，否则会降低性能】专属于`PreparedStatement`。
+
+
+### ResultSetMetaData——遍历结果集需要用的
+假设你是orm框架的作者，你最重要的工作就是——把 java class 里的成员名，与数据库的列名对应起来。
+
+鉴于 ResultSet 本身的结构，我们需要知道：列index、列名、列值类型(sqlType <=> jdbcType)
+
+```java
+ResultSetMetaData rsmd = rs.getMetaData();
+int numberOfColumns = rsmd.getColumncCount();
+for (int i = 1; i <= numberOfColumns; i++) {
+	// 注意，列名是从 1 开始获取的。
+	String columnName = rsmd.getColumnLabel(i);
+	// jdbcType 是有固定 code 编码来定义的。如 int 4 -> java.sql.Types.INTEGER;
+	int jdbcType = rsmd.getColumnType(i);
+}
+```
