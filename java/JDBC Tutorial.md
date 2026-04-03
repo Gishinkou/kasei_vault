@@ -87,6 +87,7 @@ jdbcType 和`java.sql.Types`里的定义是完全等价的。
 
 #### 关键问题： preparedStatement，编译发生在什么位置
 
-从上述过程可以看出，`preparedStatement`主要是通过`prepareStatement(sql)`
+从上述过程可以看出，`preparedStatement`主要是通过`prepareStatement(sql)`方法，**触发一次服务器编译**，并将 `statement_id`存在内存中，作为下次访问的凭据。
+
 
 
