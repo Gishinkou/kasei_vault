@@ -215,7 +215,7 @@ Object invokeInTransaction(Method method, Object[] args) {
 
 ### executeBatch()
 
-本质上是把一批 SQL 一起执行
+`Statement`的 batch 本质上是把一批 SQL 一起执行
 ```java
 con.setAutoCommit(false);
 Statement stmt = con.createStatement();
@@ -226,3 +226,19 @@ con.commit();
 con.setAutoCommit(true);
 ```
 
+`PreparedStatement`的batch，则可以拼接 insert 的多参数功能
+```java
+con.setAutoCommit(false);
+PreparedStatement pstmt = con.prepareStatement("INSERT INTO COFFEES VALUES(?, ?))");
+pstmt.setString(1, "Americano");
+pstmt.setInt(2,49);
+pstmt.addBatch();
+pstmt.setString(1, "japan");
+pstmt.setInt(2,50);
+pstmt.addBatch();
+int[] updateCounts = pstmt.executeBatch();
+con.commit();
+con.setAutoCommit(true);
+```
+
+e
