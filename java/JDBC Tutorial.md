@@ -283,3 +283,6 @@ for (int i = 1; i <= numberOfColumns; i++) {
 	int jdbcType = rsmd.getColumnType(i);
 }
 ```
+
+### DatabaseMetaData
+有 150 多个属性，代表着数据库支持的各种能力。
