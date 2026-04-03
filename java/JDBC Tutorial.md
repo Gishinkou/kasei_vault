@@ -1,4 +1,4 @@
-
+文章约定：章节标题默认 2 级 sharp
 ## executeUpdate 还支持DDL
 
 `executeUpdate`不止用于增删改 DML，还用于**建表**的DDL。
@@ -71,13 +71,13 @@ jdbcType 和`java.sql.Types`里的定义是完全等价的。
 主要区别：从“编译发生的地点”考虑：
 - Statement：SQL立即发送，编译发生在**数据库**
 - PreparedStatement：SQL已经**编译完成**，复用，但**编译发生在什么地方？**
-#### PreparedStatement 到底持有什么
+### PreparedStatement 到底持有什么
 
 - 有`?` 占位符
 - 有 `setter` 绑定参数
 - **数据库可以复用执行计划**
 
-#### 插播：数据库对一条SQL做哪些步骤
+### 插播：数据库对一条SQL做哪些步骤
 1. parseSQL: 语法层面的分析
 2. optimize: SQL 优化
 3. executionPlan：创建执行计划
@@ -85,11 +85,11 @@ jdbcType 和`java.sql.Types`里的定义是完全等价的。
 5. 客户端 `setInt/ setString` 等，设置参数
 6. 客户端 `execute()`，将 `{参数 + statement_id}` 发出
 
-#### 关键问题： preparedStatement，编译发生在什么位置
+### 关键问题： preparedStatement，编译发生在什么位置
 
 从上述过程可以看出，`preparedStatement`主要是通过`prepareStatement(sql)`方法，理论上会**触发一次服务器编译**，并将 `statement_id`存在内存中，作为下次访问的凭据。
 
-##### mysql 服务端的支持
+#### mysql 服务端的支持
 但究竟是不是这样呢？让我们看一下 Mysql 文章中的 PrepareStatement 章节是怎么写的 [Mysql官方文档 15.5preparedStatements](https://dev.mysql.com/doc/refman/8.4/en/sql-prepared-statements.html)
 
 >MySQL 8.4 provides support for server-side prepared statements. This support takes advantage of the efficient client/server binary protocol. Using prepared statements with placeholders for parameter values has the following benefits:
@@ -100,7 +100,7 @@ jdbcType 和`java.sql.Types`里的定义是完全等价的。
 
 但这仍是 server 端的策略，具体行为其实是一个client 和 server 端协同的过程，让我们看一下 jdbc-mysql 的实现。
 
-##### jdbc-mysql 客户端驱动的实现
+#### jdbc-mysql 客户端驱动的实现
 
 查看[mysql connectors documentation 6.4 jdbc api implementation notes](https://dev.mysql.com/doc/connector-j/en/connector-j-reference-implementation-notes.html)，能看到mysql jdbc connector 的具体实现。
 
@@ -111,3 +111,24 @@ jdbcType 和`java.sql.Types`里的定义是完全等价的。
 从上述文本，可以知道， mysql 默认采取 `client-side` 的编译，高版本的 mysql 即使支持 `server-side`编译，也需要显式地打开配置，set `useServerPrepStmts=true`。
 
 因此，我们可以建立这样的心智模型： client 的 jdbc-mysql 默认带有 sql 编译能力，调用 `prepareStatement` 后，就能产生带有问号的语句，之后直接把该语句发送给 server，获取 `statement_id`，作为后续访问这个编译结果的凭据。
+
+### PreparedStatement 如何执行
+
+回到简单的 api 使用，我们理解了具体执行前，我们拿到了一个 statement token，有几个需要填入的参数。填完了以后，如何具体执行呢？
+
+#### update 类型的执行
+- `int executeUpdate()`：无参数，直接运行。
+	- 不是`execute()`?
+	- 返回值是一个 int，返回本次更新的行数
+- 返回值为 0 的意义**有两种**：
+	- `statement` DML 被执行了，且影响行数为 0
+	- DDL 语句默认返回 0；
+
+## 手搓事务
+
+事务从**客户端**视角来看，就只有两件事：
+1. 关闭**连接的自动提交机制**(`con.setAutoCommit(false);`)，然后在**关闭自动提交**的情况下，执行数条SQL语句
+2. 提交事务（`con.commit();`）
+3. 恢复自动提交 `con.setAutoCommit(true);`
+
+事务隔离等级，从客户端来看，其实就是一个连接的属性
