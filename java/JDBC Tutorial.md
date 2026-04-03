@@ -87,7 +87,15 @@ jdbcType 和`java.sql.Types`里的定义是完全等价的。
 
 #### 关键问题： preparedStatement，编译发生在什么位置
 
-从上述过程可以看出，`preparedStatement`主要是通过`prepareStatement(sql)`方法，**触发一次服务器编译**，并将 `statement_id`存在内存中，作为下次访问的凭据。
+从上述过程可以看出，`preparedStatement`主要是通过`prepareStatement(sql)`方法，理论上会**触发一次服务器编译**，并将 `statement_id`存在内存中，作为下次访问的凭据。
+
+但究竟是不是这样呢？让我们看一下 Mysql 文章中的 PrepareStatement 章节是怎么写的 [Mysql官方文档 15.5preparedStatements](https://dev.mysql.com/doc/refman/8.4/en/sql-prepared-statements.html)
+
+>MySQL 8.4 provides support for server-side prepared statements. This support takes advantage of the efficient client/server binary protocol. Using prepared statements with placeholders for parameter values has the following benefits:
+> - Less overhead for parsing the statement each time it is executed. Typically, database applications process large volumes of almost-identical statements, with only changes to literal or variable values in clauses such as `WHERE` for queries and deletes, `SET` for updates, and `VALUES` for inserts.
+> - Protection against SQL injection attacks. The parameter values can contain unescaped SQL quote and delimiter characters.
+
+文章中明确指出“server-side prepared statements”。这样做的好处有两点：1. 减少额外成本(overhead)，并且明确是"parsing statement"这种解析上的成本。
 
 
 
