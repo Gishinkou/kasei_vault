@@ -306,3 +306,11 @@ for (int i = 1; i <= numberOfColumns; i++) {
 	1. 初始化时校验库表是否存在（DAL目前不支持的能力）
 	2. 判断某表有没有主键、索引
 	3. 合并结果时识别列信息
+
+## MultipleOpenResults
+
+```java
+if (dbmd.supportsMultipleOpenResutls()) {
+	cstmt.getMoreResults(Statement.KEEP_CURRENT_RESULT);
+}
+```
