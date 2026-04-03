@@ -148,3 +148,65 @@ conn.setTransactionIsolation(REPEATABLE_READ);
 SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 ```
 
+
+### 尝试复原一下 Spring 事务管理在背后做的事情（主链路、简明）
+
+1. 进入代理
+2. 获取 `Connection`
+3. 关掉 `autoCommit`
+4. 把 `Connection` 绑定到当前线程
+5. 执行业务里的 JDBC / MyBatis 代码
+6. 成功就 `commit`
+7. 失败就 `rollback`
+8. 恢复连接状态并归还连接池
+
+```java
+
+Object invokeInTransaction(Method method, Object[] args) {
+    Connection conn = null;
+    boolean newTx = false;
+
+    try {
+        // 1. 看当前线程有没有事务
+        ConnectionHolder holder = TransactionSynchronizationManager.getResource(dataSource);
+
+        if (holder == null) {
+            // 2. 没有就新开一个事务
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);   // 开启事务语义
+            holder = new ConnectionHolder(conn);
+            TransactionSynchronizationManager.bindResource(dataSource, holder);
+            newTx = true;
+        } else {
+            // 3. 已有事务就加入
+            conn = holder.getConnection();
+        }
+
+        // 4. 执行业务方法
+        Object result = method.invoke(target, args);
+
+        // 5. 提交
+        if (newTx) {
+            conn.commit();
+        }
+
+        return result;
+    } catch (Throwable ex) {
+        // 6. 回滚
+        if (newTx && conn != null) {
+            conn.rollback();
+        }
+        throw ex;
+    } finally {
+        // 7. 清理
+        if (newTx && conn != null) {
+            try {
+                conn.setAutoCommit(true); // 恢复连接池要求的默认状态
+            } finally {
+                TransactionSynchronizationManager.unbindResource(dataSource);
+                conn.close(); // 实际通常是还回连接池。如 hikariCP 连接池
+            }
+        }
+    }
+}
+```
