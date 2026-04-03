@@ -241,4 +241,6 @@ con.commit();
 con.setAutoCommit(true);
 ```
 
-e
+`executeBatch()`方法的异常：
+1. 中途某一条其实是`Query`（`SELECT`）
+2. 中途有一条失败了。
