@@ -65,3 +65,28 @@ float n = rs.getFloat(2);
 
 jdbcType 和`java.sql.Types`里的定义是完全等价的。
 
+
+## PreparedStatement
+
+主要区别：从“编译发生的地点”考虑：
+- Statement：SQL立即发送，编译发生在**数据库**
+- PreparedStatement：SQL已经**编译完成**，复用，但**编译发生在什么地方？**
+#### PreparedStatement 到底持有什么
+
+- 有`?` 占位符
+- 有 `setter` 绑定参数
+- **数据库可以复用执行计划**
+
+#### 插播：数据库对一条SQL做哪些步骤
+1. parseSQL: 语法层面的分析
+2. optimize: SQL 优化
+3. executionPlan：创建执行计划
+4. return statement id：返回 `statement_id` （关键，这是后续传参数的凭据）
+5. 客户端 `setInt/ setString` 等，设置参数
+6. 客户端 `execute()`，将 `{参数 + statement_id}` 发出
+
+#### 关键问题： preparedStatement，编译发生在什么位置
+
+从上述过程可以看出，`preparedStatement`主要是通过`prepareStatement(sql)`
+
+
