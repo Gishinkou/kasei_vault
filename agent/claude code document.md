@@ -73,3 +73,12 @@ After /compact
 22.2K → 9.1K tokens · freed 13.1K
 
 压缩率约41%
+
+## Agent Loop
+![[agentloop.png]]
+
+agent 办事包括
+- 收集环境
+- 执行动作
+- 检查结果
+这样的动作循环。循环直到完成目标
