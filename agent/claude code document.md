@@ -57,7 +57,14 @@ SKILL 是懒加载的，当且仅当 SKILL 被调用时，内容才会被加载
 
 如果命中了`*.test.ts`的命名规则，也会尝试
 
-
 ## subagent
 
 subagent 其实主要就是开了一个新的“agent”会话。让 subagent 执行一批指令后，只返回结果。避免上下文被无关内容污染。
+
+## 压缩上下
+
+`/compact`
+```
+Context is at 22.2K tokens. Run `/compact` to summarize older exchanges and free space for more work.
+```
+
