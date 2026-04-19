@@ -45,3 +45,10 @@ machine-root
 > 头结点这个概念，在英文数据结构教材中，叫作 `sentinel node`，和 alibaba Sentinel 产品命名撞上了
 
 
+## 资源节点（ClusterNode）ClusterBuilderSlot
+
+上文我们提到了**资源（Resource）**与资源ID**（ResourceKey）**，本章节讲解资源的整合方式。
+
+资源 ID 的存在实体是`ClusterNode`
+
+
