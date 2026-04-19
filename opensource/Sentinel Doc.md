@@ -42,4 +42,6 @@ machine-root
 负责创建节点的模块叫`NodeSelectorSlot`，第一次 `entry()` 的动作，由于是**无头结点的尾插链表**，因此新建出来的节点成为头结点，而线程级的`current`指针其实就是链表尾指针。
 
 
+> 有趣的是，有无头结点这个概念，在英文数据结构教材中，叫作 `sentinel node`，和 alibaba Sentinel 产品命名撞上了
+
 
