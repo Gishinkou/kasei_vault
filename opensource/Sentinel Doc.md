@@ -35,7 +35,11 @@ machine-root
            └── DefaultNode(nodeA)
 ```
 
+调用链数据结构本质上是一个`无头结点的链表（尾插法）`
+
 创建入口的动作，来自`ContextUtil.enter("entrance1");`，主要语义是开辟一个新的线程变量，作为链的头结点。因此这里的用词是`ContextUtil`。此时主要做了`创建 ThreadLocal`并`把头结点标记为null，此时还没有任何调用链路。
 
-负责创建节点的模块叫`NodeSelectorSlot`，第一次 `entry()` 的动作，其实是创建第一个链路节点，把头结点标记 null 替换为第一个节点。
+负责创建节点的模块叫`NodeSelectorSlot`，第一次 `entry()` 的动作，由于是**无头结点的尾插链表**，因此新建出来的节点成为头结点，而线程级的`current`指针其实就是链表尾指针。
+
+
 
