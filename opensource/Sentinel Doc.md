@@ -82,4 +82,8 @@ ClusterNode(nodeA)
      构建树         全局统计       分桶统计
 ```
 
-剧透一下：每个 `ClusterNode`和 `origin`是独立的**计算桶**，都会独立分配一套qps窗口统计器。这个**计算桶**的实体是`StatisticNode`。`ClusterNode`和`origin`
+剧透一下：每个 `ClusterNode`和 `origin`是独立的**计算桶**，都会独立分配一套qps窗口统计器。这个**计算桶**的实体是`StatisticNode`。`ClusterNode`和`origin`都继承自这个类，因此各自具有独立的计算桶资源。
+
+### `StatisticNode`——**计算桶**
+
+计算桶是说一个请求进来，我们需要同时更新多个不同维度的计算桶，
