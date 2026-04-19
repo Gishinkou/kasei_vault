@@ -52,3 +52,32 @@ machine-root
 资源 ID 的存在实体是`ClusterNode`
 
 
+### 多 caller 情况（多origin）
+
+`caller`本质是一个额外的 tag，会导致同一个`Resource`的**分桶统计**
+
+`caller` tag 的启用方式，是在 `ContextUtil.enter(...)` 方法调用时显式地传入。
+
+```
+ContextUtil.enter("entrance1", "caller1");
+```
+这里的`"caller1"`是 origin （调用来源）
+
+```plain
+ClusterNode(nodeA)
+   ├── origin: caller1
+   ├── origin: caller2
+```
+
+```
+                    请求
+                      │
+        ┌─────────────┼─────────────┐
+        │             │             │
+   Context        resourceId      origin
+ (入口/链路)       (资源)         (调用方)
+        │             │             │
+        ▼             ▼             ▼
+  NodeSelector   ClusterNode   origin stats
+     构建树         全局统计       分桶统计
+```
