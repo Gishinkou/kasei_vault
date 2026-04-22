@@ -101,31 +101,33 @@ PROP_SOCKET_TIMEOUT,
 
 ## 一、基础连接配置(9项)
 
-| 配置项                           | 类型         | 默认值        | 说明               |
-| ----------------------------- | ---------- | ---------- | ---------------- |
-| `url`                         | String     | null       | JDBC 连接 URL      |
-| `username`                    | String     | null       | 数据库用户名           |
-| `password`                    | String     | null       | 数据库密码            |
-| `driverClassName`             | String     | null（自动检测） | JDBC 驱动类名        |
-| `connectProperties`           | Properties | 空          | 传递给 JDBC 驱动的额外属性 |
-| `defaultAutoCommit`           | boolean    | true       | 连接默认自动提交状态       |
-| `defaultReadOnly`             | Boolean    | null       | 连接默认只读状态         |
-| `defaultTransactionIsolation` | Integer    | null       | 默认事务隔离级别         |
-| `defaultCatalog`              | String     | null       | 默认 catalog       |
+| 配置项                           | 类型         | 默认值        | 说明                                                    |
+| ----------------------------- | ---------- | ---------- | ----------------------------------------------------- |
+| `url`                         | String     | null       | JDBC 连接 URL                                           |
+| `username`                    | String     | null       | 数据库用户名                                                |
+| `password`                    | String     | null       | 数据库密码                                                 |
+| `driverClassName`             | String     | null（自动检测） | JDBC 驱动类名                                             |
+| `connectProperties`           | Properties | 空          | 传递给 JDBC 驱动的额外属性                                      |
+| `defaultAutoCommit`           | boolean    | true       | 连接默认自动提交状态                                            |
+| `defaultReadOnly`             | Boolean    | null       | 连接默认只读状态                                              |
+| `defaultTransactionIsolation` | Integer    | null       | 默认事务隔离级别                                              |
+| `defaultCatalog`              | String     | null       | 默认 catalog （catalog 就是 schema/database，SQL 不写库名时的默认值） |
 
 ---
 
 ## 二、连接池大小配置（6 项）
 
-|配置项|类型|默认值|说明|
-|---|---|---|---|
-|`initialSize`|int|0|启动时初始化的连接数|
-|`maxActive`|int|8|最大活跃连接数|
-|`minIdle`|int|0|最小空闲连接数|
-|`maxIdle`|int|8|最大空闲连接数|
-|`maxWait`|long|-1（不限）|获取连接的最大等待时间（毫秒）|
-|`notFullTimeoutRetryCount`|int|0|连接池满时的重试次数|
-
+| 配置项                        | 类型   | 默认值    | 说明                 |
+| -------------------------- | ---- | ------ | ------------------ |
+| `initialSize`              | int  | 0      | 启动时初始化的连接数         |
+| `maxActive`                | int  | 8      | 最大活跃连接数            |
+| `minIdle`                  | int  | 0      | 最小空闲连接数            |
+| `maxIdle`                  | int  | 8      | 【完全废弃】getter 无任何引用 |
+| `maxWait`                  | long | -1（不限） | 获取连接的最大等待时间（毫秒）    |
+| `notFullTimeoutRetryCount` | int  | 0      | 连接池满时的重试次数         |
+|                            |      |        |                    |
+|                            |      |        |                    |
+- maxIdle 完全无任何引用
 ---
 
 ## 三、连接验证配置（7 项）
