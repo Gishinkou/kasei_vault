@@ -213,3 +213,4 @@ PROP_SOCKET_TIMEOUT,
 | `useGlobalDataSourceStat`   | boolean | false | 是否使用全局统计数据              |
 | `resetStatEnable`           | boolean | true  | 是否允许重置统计数据              |
 | `logDifferentThread`        | boolean | true  | 是否记录不同线程的操作             |
+Druid 的性能监控日志，是后台线程打印的，默认行为是什么日志都不打印。有一个开关，能控制一个进程下的多个 druid 实例的日志是不是打在一起；一个开关控制，是否允许通过 MBean 直接重置统计值；一个控制“跨线程归还”的warn，用来提醒“连接泄露”。
