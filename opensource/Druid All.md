@@ -99,7 +99,7 @@ PROP_SOCKET_TIMEOUT,
 | validationQueryTimeout                    | -1              | 单位：秒，检测连接是否有效的超时时间，大于0才生效。底层调用jdbc Statement对象的void setQueryTimeout(int seconds)方法                                                                                                                               | public void com.alibaba.druid.pool.DruidAbstractDataSource.setValidationQueryTimeout(int)                                     |
 
 
-## 一、基础连接配置
+## 一、基础连接配置(9项)
 
 | 配置项                           | 类型         | 默认值        | 说明               |
 | ----------------------------- | ---------- | ---------- | ---------------- |
@@ -115,7 +115,7 @@ PROP_SOCKET_TIMEOUT,
 
 ---
 
-## 二、连接池大小配置
+## 二、连接池大小配置（6 项）
 
 |配置项|类型|默认值|说明|
 |---|---|---|---|
@@ -128,7 +128,7 @@ PROP_SOCKET_TIMEOUT,
 
 ---
 
-## 三、连接验证配置
+## 三、连接验证配置（7 项）
 
 |配置项|类型|默认值|说明|
 |---|---|---|---|
@@ -142,7 +142,7 @@ PROP_SOCKET_TIMEOUT,
 
 ---
 
-## 四、PreparedStatement 缓存配置
+## 四、PreparedStatement 缓存配置（4 项）
 
 |配置项|类型|默认值|说明|
 |---|---|---|---|
@@ -153,7 +153,7 @@ PROP_SOCKET_TIMEOUT,
 
 ---
 
-## 五、连接驱逐与保活配置
+## 五、连接驱逐与保活配置（8 项）
 
 |配置项|类型|默认值|说明|
 |---|---|---|---|
@@ -168,19 +168,20 @@ PROP_SOCKET_TIMEOUT,
 
 ---
 
-## 六、超时配置
+## 六、超时配置（5 项）
 
-|配置项|类型|默认值|说明|
-|---|---|---|---|
-|`connectTimeout`|int|0（驱动默认）|建立连接的超时时间（毫秒）|
-|`socketTimeout`|int|0（驱动默认）|Socket 读写超时时间（毫秒）|
-|`queryTimeout`|int|0（不限）|默认查询超时时间（秒）|
-|`transactionQueryTimeout`|int|0（同 queryTimeout）|事务中的查询超时时间（秒）|
-|`maxWaitThreadCount`|int|-1（不限）|最大等待获取连接的线程数|
+| 配置项                       | 类型  | 默认值               | 说明                |
+| ------------------------- | --- | ----------------- | ----------------- |
+| `connectTimeout`          | int | 0（驱动默认）           | 建立连接的超时时间（毫秒）     |
+| `socketTimeout`           | int | 0（驱动默认）           | Socket 读写超时时间（毫秒） |
+| `queryTimeout`            | int | 0（不限）             | 默认查询超时时间（秒）       |
+| `transactionQueryTimeout` | int | 0（同 queryTimeout） | 事务中的查询超时时间（秒）     |
+| `maxWaitThreadCount`      | int | -1（不限）            | 最大等待获取连接的线程数      |
+|                           |     |                   |                   |
 
 ---
 
-## 七、废弃连接处理配置
+## 七、废弃连接处理配置（3 项）
 
 |配置项|类型|默认值|说明|
 |---|---|---|---|
@@ -190,7 +191,7 @@ PROP_SOCKET_TIMEOUT,
 
 ---
 
-## 八、初始化与行为配置
+## 八、初始化与行为配置（5 项）
 
 |配置项|类型|默认值|说明|
 |---|---|---|---|
@@ -202,13 +203,13 @@ PROP_SOCKET_TIMEOUT,
 
 ---
 
-## 九、监控统计配置（仅连接池行为相关）
+## 九、监控统计配置（仅连接池行为相关）（4 项）
 
 > 以下属于连接池运行行为，不是外围监控 Servlet/JMX 配置：
 
-|配置项|类型|默认值|说明|
-|---|---|---|---|
-|`timeBetweenLogStatsMillis`|long|0（禁用）|定期打印统计日志的间隔（毫秒），0 表示不打印|
-|`useGlobalDataSourceStat`|boolean|false|是否使用全局统计数据|
-|`resetStatEnable`|boolean|true|是否允许重置统计数据|
-|`logDifferentThread`|boolean|true|是否记录不同线程的操作|
+| 配置项                         | 类型      | 默认值   | 说明                      |
+| --------------------------- | ------- | ----- | ----------------------- |
+| `timeBetweenLogStatsMillis` | long    | 0（禁用） | 定期打印统计日志的间隔（毫秒），0 表示不打印 |
+| `useGlobalDataSourceStat`   | boolean | false | 是否使用全局统计数据              |
+| `resetStatEnable`           | boolean | true  | 是否允许重置统计数据              |
+| `logDifferentThread`        | boolean | true  | 是否记录不同线程的操作             |
