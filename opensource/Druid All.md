@@ -1,4 +1,4 @@
-37 个配置项
+37 个配置项，14 个字符串项，共 51 项
 PROP_DEFAULTAUTOCOMMIT,  
 PROP_DEFAULTREADONLY,  
 PROP_DEFAULTTRANSACTIONISOLATION,  
@@ -36,6 +36,20 @@ PROP_INIT,
 PROP_NAME,  
 PROP_CONNECT_TIMEOUT,  
 PROP_SOCKET_TIMEOUT,
+"druid.timeBetweenLogStatsMillis",  
+"druid.stat.sql.MaxSize",  
+"druid.clearFiltersEnable",  
+"druid.resetStatEnable", //  
+"druid.notFullTimeoutRetryCount", //  
+"druid.maxWaitThreadCount", //  
+"druid.failFast", //  
+"druid.phyTimeoutMillis", //  
+"druid.wall.tenantColumn", //  
+"druid.wall.updateAllow", //  
+"druid.wall.deleteAllow", //  
+"druid.wall.insertAllow", //  
+"druid.wall.selelctAllow", //  
+"druid.wall.multiStatementAllow", //
 
 |                                           |                 |                                                                                                                                                                                                                  |                                                                                                                               |
 | ----------------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
@@ -83,3 +97,118 @@ PROP_SOCKET_TIMEOUT,
 | username                                  | null            | 连接数据库的用户名                                                                                                                                                                                                        | public void com.alibaba.druid.pool.DruidAbstractDataSource.setUsername(java.lang.String)                                      |
 | validationQuery                           | null            | 用来检测连接是否有效的sql，要求是一个查询语句，常用select 'x'。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会起作用。                                                                                                      | public void com.alibaba.druid.pool.DruidAbstractDataSource.setValidationQuery(java.lang.String)                               |
 | validationQueryTimeout                    | -1              | 单位：秒，检测连接是否有效的超时时间，大于0才生效。底层调用jdbc Statement对象的void setQueryTimeout(int seconds)方法                                                                                                                               | public void com.alibaba.druid.pool.DruidAbstractDataSource.setValidationQueryTimeout(int)                                     |
+
+
+## 一、基础连接配置
+
+| 配置项                           | 类型         | 默认值        | 说明               |
+| ----------------------------- | ---------- | ---------- | ---------------- |
+| `url`                         | String     | null       | JDBC 连接 URL      |
+| `username`                    | String     | null       | 数据库用户名           |
+| `password`                    | String     | null       | 数据库密码            |
+| `driverClassName`             | String     | null（自动检测） | JDBC 驱动类名        |
+| `connectProperties`           | Properties | 空          | 传递给 JDBC 驱动的额外属性 |
+| `defaultAutoCommit`           | boolean    | true       | 连接默认自动提交状态       |
+| `defaultReadOnly`             | Boolean    | null       | 连接默认只读状态         |
+| `defaultTransactionIsolation` | Integer    | null       | 默认事务隔离级别         |
+| `defaultCatalog`              | String     | null       | 默认 catalog       |
+
+---
+
+## 二、连接池大小配置
+
+|配置项|类型|默认值|说明|
+|---|---|---|---|
+|`initialSize`|int|0|启动时初始化的连接数|
+|`maxActive`|int|8|最大活跃连接数|
+|`minIdle`|int|0|最小空闲连接数|
+|`maxIdle`|int|8|最大空闲连接数|
+|`maxWait`|long|-1（不限）|获取连接的最大等待时间（毫秒）|
+|`notFullTimeoutRetryCount`|int|0|连接池满时的重试次数|
+
+---
+
+## 三、连接验证配置
+
+|配置项|类型|默认值|说明|
+|---|---|---|---|
+|`validationQuery`|String|null|用于验证连接有效性的 SQL|
+|`validationQueryTimeout`|int|-1|验证查询超时时间（秒）|
+|`testOnBorrow`|boolean|false|借出连接时是否验证|
+|`testOnReturn`|boolean|false|归还连接时是否验证|
+|`testWhileIdle`|boolean|true|空闲时是否验证连接|
+|`validConnectionChecker`|ValidConnectionChecker|null（DB 自动适配）|自定义连接验证实现|
+|`useUnfairLock`|boolean|true|是否使用非公平锁获取连接|
+
+---
+
+## 四、PreparedStatement 缓存配置
+
+|配置项|类型|默认值|说明|
+|---|---|---|---|
+|`poolPreparedStatements`|boolean|false|是否开启 PreparedStatement 缓存|
+|`sharePreparedStatements`|boolean|false|是否在连接间共享 PreparedStatement|
+|`maxPoolPreparedStatementPerConnectionSize`|int|10|每个连接最多缓存的 PreparedStatement 数量|
+|`maxOpenPreparedStatements`|int|-1|同上（别名）|
+
+---
+
+## 五、连接驱逐与保活配置
+
+|配置项|类型|默认值|说明|
+|---|---|---|---|
+|`timeBetweenEvictionRunsMillis`|long|60000（1分钟）|驱逐线程运行间隔（毫秒）|
+|`numTestsPerEvictionRun`|int|3|每次驱逐检测的连接数|
+|`minEvictableIdleTimeMillis`|long|1800000（30分钟）|连接最小空闲时间，超过才可被驱逐（毫秒）|
+|`maxEvictableIdleTimeMillis`|long|25200000（7小时）|连接最大空闲时间，超过强制驱逐（毫秒）|
+|`keepAlive`|boolean|false|是否开启连接保活|
+|`keepAliveBetweenTimeMillis`|long|120000（2分钟）|保活检测间隔（毫秒）|
+|`phyTimeoutMillis`|long|-1（不限）|物理连接的最大存活时间（毫秒）|
+|`phyMaxUseCount`|long|-1（不限）|物理连接最大使用次数|
+
+---
+
+## 六、超时配置
+
+|配置项|类型|默认值|说明|
+|---|---|---|---|
+|`connectTimeout`|int|0（驱动默认）|建立连接的超时时间（毫秒）|
+|`socketTimeout`|int|0（驱动默认）|Socket 读写超时时间（毫秒）|
+|`queryTimeout`|int|0（不限）|默认查询超时时间（秒）|
+|`transactionQueryTimeout`|int|0（同 queryTimeout）|事务中的查询超时时间（秒）|
+|`maxWaitThreadCount`|int|-1（不限）|最大等待获取连接的线程数|
+
+---
+
+## 七、废弃连接处理配置
+
+|配置项|类型|默认值|说明|
+|---|---|---|---|
+|`removeAbandoned`|boolean|false|是否自动回收废弃连接|
+|`removeAbandonedTimeoutMillis`|long|300000（5分钟）|连接被认定为废弃的超时时间（毫秒）|
+|`logAbandoned`|boolean|false|是否记录废弃连接的堆栈信息|
+
+---
+
+## 八、初始化与行为配置
+
+|配置项|类型|默认值|说明|
+|---|---|---|---|
+|`asyncInit`|boolean|false|是否异步初始化连接|
+|`failFast`|boolean|false|连接失败时是否立即抛出异常（不等待）|
+|`connectionInitSqls`|List<String>|null|连接创建后执行的初始化 SQL 列表|
+|`filters`|String|""（空）|过滤器列表（逗号分隔，如 `stat,wall`）|
+|`killWhenSocketReadTimeout`|boolean|false|Socket 读超时时是否强制关闭连接|
+
+---
+
+## 九、监控统计配置（仅连接池行为相关）
+
+> 以下属于连接池运行行为，不是外围监控 Servlet/JMX 配置：
+
+|配置项|类型|默认值|说明|
+|---|---|---|---|
+|`timeBetweenLogStatsMillis`|long|0（禁用）|定期打印统计日志的间隔（毫秒），0 表示不打印|
+|`useGlobalDataSourceStat`|boolean|false|是否使用全局统计数据|
+|`resetStatEnable`|boolean|true|是否允许重置统计数据|
+|`logDifferentThread`|boolean|true|是否记录不同线程的操作|
