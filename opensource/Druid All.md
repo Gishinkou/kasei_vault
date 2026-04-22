@@ -132,15 +132,15 @@ PROP_SOCKET_TIMEOUT,
 
 ## 三、连接验证配置（7 项）
 
-|配置项|类型|默认值|说明|
-|---|---|---|---|
-|`validationQuery`|String|null|用于验证连接有效性的 SQL|
-|`validationQueryTimeout`|int|-1|验证查询超时时间（秒）|
-|`testOnBorrow`|boolean|false|借出连接时是否验证|
-|`testOnReturn`|boolean|false|归还连接时是否验证|
-|`testWhileIdle`|boolean|true|空闲时是否验证连接|
-|`validConnectionChecker`|ValidConnectionChecker|null（DB 自动适配）|自定义连接验证实现|
-|`useUnfairLock`|boolean|true|是否使用非公平锁获取连接|
+| 配置项                      | 类型                     | 默认值           | 说明             |
+| ------------------------ | ---------------------- | ------------- | -------------- |
+| `validationQuery`        | String                 | null          | 用于验证连接有效性的 SQL |
+| `validationQueryTimeout` | int                    | -1            | 验证查询超时时间（秒）    |
+| `testOnBorrow`           | boolean                | false         | 借出连接时是否验证      |
+| `testOnReturn`           | boolean                | false         | 归还连接时是否验证      |
+| `testWhileIdle`          | boolean                | true          | 空闲时是否验证连接      |
+| `validConnectionChecker` | ValidConnectionChecker | null（DB 自动适配） | 自定义连接验证实现      |
+| `useUnfairLock`          | boolean                | true          | 是否使用非公平锁获取连接   |
 
 ---
 
