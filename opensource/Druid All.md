@@ -154,6 +154,8 @@ PROP_SOCKET_TIMEOUT,
 		- 建连和等待连接，通过`emptyWaitThreadCount`和`notEmptyWaitThreadCount`来进行统计。统计等待各类信号的数量。
 	- 读到这里，`maxWaitThreadCount` 的作用似乎明朗了，可以用来控制，这样一批通过信号等待的线程队列的大小。
 	- 而`notFullTimeoutRetryCount`的作用也明朗了，它直接尝试在**超时**错误时，如果连接池未满，则进行重试，这里包含了所有
+- 以上过程过完后，连接基本取到了
+	- 开始进行连接验证
 	 
 ---
 
@@ -169,7 +171,12 @@ PROP_SOCKET_TIMEOUT,
 | `validConnectionChecker` | ValidConnectionChecker | null（DB 自动适配） | 自定义连接验证实现      |
 | `useUnfairLock`          | boolean                | true          | 是否使用非公平锁获取连接   |
 |                          |                        |               |                |
-
+- 连接验证的优先级是：testOnBorrow
+	- 开启了后，每次获取连接后，都会执行一次连接校验，若未通过则进入下一个死循环，尝试获取连接
+	- 若未开启，则尝试查看连接是否已关闭。否则进入下一个死循环，尝试获取连接
+		- 空闲校验
+			- 读取上一次`lastActiveTimeMillis`，查看现在时间戳到上次活跃是否**超过**了 `timeBetweenEvictionRunsMillis`
+		- 删除废弃`removeAbandoned`：
 ---
 
 ## 四、PreparedStatement 缓存配置（4 项）
