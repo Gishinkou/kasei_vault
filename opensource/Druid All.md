@@ -151,7 +151,10 @@ PROP_SOCKET_TIMEOUT,
 	- 满足需求的流程
 		- 1. 如果poolCount=0，则发送`empty.signal()`，唤醒正在等待这个条件的人。同时启动**一个建连任务**，
 		- 2. `notEmpty.await(long time, 毫秒/秒等单位)`睡眠等待建连成功（`notEmpty`信号），睡眠时间是`超时时间-启动时间`
-
+		- 建连和等待连接，通过`emptyWaitThreadCount`和`notEmptyWaitThreadCount`来进行统计。统计等待各类信号的数量。
+	- 读到这里，`maxWaitThreadCount` 的作用似乎明朗了，可以用来控制，这样一批通过信号等待的线程队列的大小。
+	- 而`notFullTimeoutRetryCount`的作用也明朗了，它直接
+	 
 ---
 
 ## 三、连接验证配置（7 项）
@@ -165,6 +168,7 @@ PROP_SOCKET_TIMEOUT,
 | `testWhileIdle`          | boolean                | true          | 空闲时是否验证连接      |
 | `validConnectionChecker` | ValidConnectionChecker | null（DB 自动适配） | 自定义连接验证实现      |
 | `useUnfairLock`          | boolean                | true          | 是否使用非公平锁获取连接   |
+|                          |                        |               |                |
 
 ---
 
