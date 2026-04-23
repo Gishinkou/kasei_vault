@@ -188,8 +188,13 @@ PROP_SOCKET_TIMEOUT,
 	- 探活核心的两个配置是`validationQuery`，和`validationQueryTimeout`，第一个是一个SQL，通常默认`SELECT 1;`，会真的连库执行该SQL，第二个
 		- 注意`validationQuery`通常会失效，需要配置String property = properties.getProperty("druid.mysql.usePingMethod");
 		- validationQueryTimeout 默认值是-1，会无限等待
-- `close()`方法：归还连接`testOnReturn`
-	- 
+- `close()`方法-`recycle(DruidPooledConnection conn)`方法：归还连接时`testOnReturn`
+	- 从`activeConnections`里移除该连接
+	- [TODO]处理连接与线程关系
+	- 回收过程中对链接执行探活
+	- **计算当前时间到连接创建时间** `holder.connectTimeMillis`之间的时间差，与配置项**保活时间**`phyTimeoutMillis`进行比对。如果超时则销毁连接
+	- `putLast(holder, lastActiveTimeMillis)`来把连接放回去
+	- 释放一个`notEmpty.signal()`，尝试唤醒阻塞在`notEmpty`上的线程
 ---
 
 ## 四、PreparedStatement 缓存配置（4 项）
