@@ -147,7 +147,7 @@ PROP_SOCKET_TIMEOUT,
 			- 是否有可配置的地方呢？
 	- 建连接、给阻塞线程发连接的过程，是一个条件状态的交互过程
 		- 主要思路是：拿取一个有需求的线程，在可以满足需求时通知它
-		- 满足需求的方式包括：在poolingCount=0时启动**建连线程**
+		- 可以只关注带有超时时间的**需求满足**过程`pollLast(long startTime, long expiredTime)`
 		- 
 
 ---
