@@ -132,7 +132,11 @@ PROP_SOCKET_TIMEOUT,
 - [问题 1] druid 创建连接是一个 try 方法，封装了哪些细节，失败的时候会做什么。
 	- 主要方法：`DruidDataSource#getConnection(long maxWaitMillis)`
 	- 核心逻辑：`DruidDataSource#getConnectionDirect(long maxWaitMillis)`
-	- `maxWait`：
+	- 核心逻辑`DruidDataSource#getConnectionInternal(long maxWait)`
+	- 
+	- `maxWait`：最大等待时间
+	- [TODO]`maxWaitThreadCount`: 这个还不清楚
+	- 
 ---
 
 ## 三、连接验证配置（7 项）
