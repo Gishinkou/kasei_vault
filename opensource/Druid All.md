@@ -1,3 +1,4 @@
+
 37 个配置项，14 个字符串项，共 51 项
 PROP_DEFAULTAUTOCOMMIT,  
 PROP_DEFAULTREADONLY,  
@@ -134,7 +135,7 @@ PROP_SOCKET_TIMEOUT,
 	- 核心逻辑：`DruidDataSource#getConnectionDirect(long maxWaitMillis)`
 	- 核心逻辑`DruidDataSource#getConnectionInternal(long maxWait)`
 	- 
-	- `maxWait`：最大等待时间
+	- `maxWait`：最大等待时间 
 	- [TODO]`maxWaitThreadCount`: 这个还不清楚
 	- 拿连接时，判断 活跃计数 和 空闲计数（poolingCount）是否小于 `maxActive`
 	- 拿到连接后`poolingCount--; activeCount++;`（注意纯新建时，直接变活跃，无poolingCount变化）
