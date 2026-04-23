@@ -137,8 +137,10 @@ PROP_SOCKET_TIMEOUT,
 	- 
 	- `maxWait`：最大等待时间 
 	- [TODO]`maxWaitThreadCount`: 这个还不清楚
+	- 以下文段采用深度优先搜索，每次我们先说完一个点的后续，但整体是顺序的
 	- 拿连接时，判断 活跃计数 和 空闲计数（poolingCount）是否小于 `maxActive`
-	- 拿到连接后`poolingCount--; activeCount++;`（注意纯新建时，直接变活跃，无poolingCount变化）
+		- 拿到连接后`poolingCount--; activeCount++;`（注意纯新建时，直接变活跃，无poolingCount变化）
+	- 拿不到连接时，会阻塞，用``
 
 ---
 
