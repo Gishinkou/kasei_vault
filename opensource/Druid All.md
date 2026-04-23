@@ -130,6 +130,9 @@ PROP_SOCKET_TIMEOUT,
 - maxIdle 完全无任何引用，纯粹是 dbcp 拿过来的无用选项
 - notFullTimeoutRetryCount：这是一个在**连接池没满**的情况下，拿连接失败后自动重试的机制
 - [问题 1] druid 创建连接是一个 try 方法，封装了哪些细节，失败的时候会做什么。
+	- 主要方法：`DruidDataSource#getConnection(long maxWaitMillis)`
+	- 核心逻辑：`DruidDataSource#getConnectionDirect(long maxWaitMillis)`
+	- `maxWait`：
 ---
 
 ## 三、连接验证配置（7 项）
