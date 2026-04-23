@@ -153,7 +153,7 @@ PROP_SOCKET_TIMEOUT,
 		- 2. `notEmpty.await(long time, 毫秒/秒等单位)`睡眠等待建连成功（`notEmpty`信号），睡眠时间是`超时时间-启动时间`
 		- 建连和等待连接，通过`emptyWaitThreadCount`和`notEmptyWaitThreadCount`来进行统计。统计等待各类信号的数量。
 	- 读到这里，`maxWaitThreadCount` 的作用似乎明朗了，可以用来控制，这样一批通过信号等待的线程队列的大小。
-	- 而`notFullTimeoutRetryCount`的作用也明朗了，它直接尝试在**超时**错误时，
+	- 而`notFullTimeoutRetryCount`的作用也明朗了，它直接尝试在**超时**错误时，如果连接池未满，则进行重试，这里包含了所有
 	 
 ---
 
