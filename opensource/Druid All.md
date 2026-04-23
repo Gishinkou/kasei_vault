@@ -185,7 +185,8 @@ PROP_SOCKET_TIMEOUT,
 	- 探活核心的两个配置是`validationQuery`，和`validationQueryTimeout`，第一个是一个SQL，通常默认`SELECT 1;`，会真的连库执行该SQL，第二个
 		- 注意`validationQuery`通常会失效，需要配置String property = properties.getProperty("druid.mysql.usePingMethod");
 		- validationQueryTimeout 默认值是-1，会无限等待
-- 
+- `close()`方法：归还连接`testOnReturn`
+	- 
 ---
 
 ## 四、PreparedStatement 缓存配置（4 项）
