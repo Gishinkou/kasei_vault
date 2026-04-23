@@ -177,6 +177,12 @@ PROP_SOCKET_TIMEOUT,
 		- 空闲校验
 			- 读取上一次`lastActiveTimeMillis`，查看现在时间戳到上次活跃是否**超过**了 `timeBetweenEvictionRunsMillis`
 		- 删除废弃`removeAbandoned`：
+			- 这个标志开了以后，会维护一个`activeConnections`的map中。
+			- 后续和取连接过程解耦，另一个线程去消费活跃线程，进行废弃检测。
+		- 在最后根据`defaultAutoCommit 为 false`，强行设置一下false。
+- `TestConnectionInternal`方法是探活的核心代码
+	- 入参`DruidConnectionHolder holder`携带很多**最后一次xx的时间**
+	- 探活核心的两个配置是`validationQuery`，和`validationQueryTimeout`，第一个是一个SQL，通常默认`SELECT 1;`，会真的连库执行该SQL，
 ---
 
 ## 四、PreparedStatement 缓存配置（4 项）
@@ -225,7 +231,7 @@ PROP_SOCKET_TIMEOUT,
 |`removeAbandoned`|boolean|false|是否自动回收废弃连接|
 |`removeAbandonedTimeoutMillis`|long|300000（5分钟）|连接被认定为废弃的超时时间（毫秒）|
 |`logAbandoned`|boolean|false|是否记录废弃连接的堆栈信息|
-
+![[Pasted image 20260423155411.png|278]]
 ---
 
 ## 八、初始化与行为配置（5 项）
