@@ -182,7 +182,10 @@ PROP_SOCKET_TIMEOUT,
 		- 在最后根据`defaultAutoCommit 为 false`，强行设置一下false。
 - `TestConnectionInternal`方法是探活的核心代码
 	- 入参`DruidConnectionHolder holder`携带很多**最后一次xx的时间**
-	- 探活核心的两个配置是`validationQuery`，和`validationQueryTimeout`，第一个是一个SQL，通常默认`SELECT 1;`，会真的连库执行该SQL，
+	- 探活核心的两个配置是`validationQuery`，和`validationQueryTimeout`，第一个是一个SQL，通常默认`SELECT 1;`，会真的连库执行该SQL，第二个
+		- 注意`validationQuery`通常会失效，需要配置String property = properties.getProperty("druid.mysql.usePingMethod");
+		- validationQueryTimeout 默认值是-1，会无限等待
+- 
 ---
 
 ## 四、PreparedStatement 缓存配置（4 项）
