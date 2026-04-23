@@ -150,7 +150,7 @@ PROP_SOCKET_TIMEOUT,
 		- 可以只关注带有超时时间的**需求满足**过程`pollLast(long startTime, long expiredTime)`
 	- 满足需求的流程
 		- 1. 如果poolCount=0，则发送`empty.signal()`，唤醒正在等待这个条件的人。同时启动**一个建连任务**，
-		- 2. 睡眠等待建连成功，睡眠时间是`超时时间-启动时间`
+		- 2. `notEmpty.await(long time, 毫秒/秒等单位)`睡眠等待建连成功（`notEmpty`信号），睡眠时间是`超时时间-启动时间`
 
 ---
 
