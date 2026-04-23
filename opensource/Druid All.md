@@ -171,6 +171,9 @@ PROP_SOCKET_TIMEOUT,
 | `validConnectionChecker` | ValidConnectionChecker | null（DB 自动适配） | 自定义连接验证实现           |
 | `useUnfairLock`          | boolean                | true          | 是否使用非公平锁获取连接【默认非公平】 |
 |                          |                        |               |                     |
+- 关键[useUnfairLock] 1.2.22 之后删除了和 maxWait 的联动。 1.2.22  之前，maxWait 启用时，会默认采取**公平锁**，而公平锁会降低并发效率。
+	- 【1.2.22 之前】需要配置 maxWait 和 useUnfairLock=true
+	- 【1.2.22 之后】只需配置 maxWait, useUnfaiLock 默认为true。
 - 连接验证的优先级是：testOnBorrow
 	- 开启了后，每次获取连接后，都会执行一次连接校验，若未通过则进入下一个死循环，尝试获取连接
 	- 若未开启，则尝试查看连接是否已关闭。否则进入下一个死循环，尝试获取连接
