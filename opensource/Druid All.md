@@ -117,16 +117,16 @@ PROP_SOCKET_TIMEOUT,
 
 ## 二、连接池大小配置（6 项）
 
-| 配置项                        | 类型   | 默认值    | 说明                 |
-| -------------------------- | ---- | ------ | ------------------ |
-| `initialSize`              | int  | 0      | 启动时初始化的连接数         |
-| `maxActive`                | int  | 8      | 最大活跃连接数            |
-| `minIdle`                  | int  | 0      | 最小空闲连接数            |
-| `maxIdle`                  | int  | 8      | 【完全废弃】getter 无任何引用 |
-| `maxWait`                  | long | -1（不限） | 获取连接的最大等待时间（毫秒）    |
-| `notFullTimeoutRetryCount` | int  | 0      | 连接池满时的重试次数         |
-|                            |      |        |                    |
-|                            |      |        |                    |
+| 配置项                        | 类型   | 默认值    | 说明                 | 本文覆盖 |
+| -------------------------- | ---- | ------ | ------------------ | ---- |
+| `initialSize`              | int  | 0      | 启动时初始化的连接数         |      |
+| `maxActive`                | int  | 8      | 最大活跃连接数            |      |
+| `minIdle`                  | int  | 0      | 最小空闲连接数            |      |
+| `maxIdle`                  | int  | 8      | 【完全废弃】getter 无任何引用 | ✅    |
+| `maxWait`                  | long | -1（不限） | 获取连接的最大等待时间（毫秒）    | ✅    |
+| `notFullTimeoutRetryCount` | int  | 0      | 连接池满时的重试次数         |      |
+|                            |      |        |                    |      |
+|                            |      |        |                    |      |
 - maxIdle 完全无任何引用，纯粹是 dbcp 拿过来的无用选项
 - notFullTimeoutRetryCount：这是一个在**连接池没满**的情况下，拿连接失败后自动重试的机制
 - [问题 1] druid 创建连接是一个 try 方法，封装了哪些细节，失败的时候会做什么。
@@ -136,7 +136,9 @@ PROP_SOCKET_TIMEOUT,
 	- 
 	- `maxWait`：最大等待时间
 	- [TODO]`maxWaitThreadCount`: 这个还不清楚
-	- 
+	- 拿连接时，判断 活跃计数 和 空闲计数（poolingCount）是否小于 `maxActive`
+	- 拿到连接后`poolingCount--; activeCount++;`（注意纯新建时，直接变活跃，无poolingCount变化）
+
 ---
 
 ## 三、连接验证配置（7 项）
