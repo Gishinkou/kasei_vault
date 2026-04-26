@@ -4,35 +4,35 @@
 
 ## 一、JDBC 连接基础
 
-| 参数                           | 默认值 | 选择  | 说明                                                         |                     |
-| ---------------------------- | --- | --- | ---------------------------------------------------------- | ------------------- |
-| `username`                   | —   | 🔒  | 连接数据库的用户名                                                  |                     |
-| `password`                   | —   | 🔒  | 连接数据库的密码                                                   |                     |
-| `url`                        | —   | 🔒  | JDBC 连接 URL                                                |                     |
-| `driverClassName`            | —   | 🔒  | JDBC 驱动的完整类名                                               |                     |
-| `connectionFactoryClassName` | —   | 🔒  | 自定义 `ConnectionFactory` 实现类名                               |                     |
-| `connectionProperties`       | —   | 🔒  | 传给驱动的额外连接属性，格式：`key=value;key2=value2`（user/password 无需包含） | [3](#0-2) [4](#0-3) |
+| 参数                           | 默认值 | 选择   | 说明                                                         |                     |
+| ---------------------------- | --- | ---- | ---------------------------------------------------------- | ------------------- |
+| `username`                   | —   |      | 连接数据库的用户名                                                  |                     |
+| `password`                   | —   |      | 连接数据库的密码                                                   |                     |
+| `url`                        | —   |      | JDBC 连接 URL                                                |                     |
+| `driverClassName`            | —   | 🔒默认 | JDBC 驱动的完整类名                                               |                     |
+| `connectionFactoryClassName` | —   | 🔒默认 | 自定义 `ConnectionFactory` 实现类名                               |                     |
+| `connectionProperties`       | —   |      | 传给驱动的额外连接属性，格式：`key=value;key2=value2`（user/password 无需包含） | [3](#0-2) [4](#0-3) |
 
 ---
 
 ## 二、连接默认行为
 
-| 参数                            | 默认值          | 选择  | 说明                                                                                           |                     |
-| ----------------------------- | ------------ | --- | -------------------------------------------------------------------------------------------- | ------------------- |
-| `defaultAutoCommit`           | 驱动默认         | 🔒  | 连接的默认 auto-commit 状态，未设置则不调用 `setAutoCommit`                                                 |                     |
-| `defaultReadOnly`             | 驱动默认         | 🔒  | 连接的默认只读状态，未设置则不调用 `setReadOnly`                                                              |                     |
-| `defaultTransactionIsolation` | 驱动默认         | 🔒  | 默认事务隔离级别：`NONE` / `READ_COMMITTED` / `READ_UNCOMMITTED` / `REPEATABLE_READ` / `SERIALIZABLE` |                     |
-| `defaultCatalog`              | —            | 🔒  | 连接的默认 catalog                                                                                |                     |
-| `defaultSchema`               | —            | 🔒  | 连接的默认 schema                                                                                 |                     |
-| `defaultQueryTimeout`         | `null`（驱动默认） | 🔒  | Statement 的默认查询超时（秒），null 表示使用驱动默认                                                           |                     |
-| `cacheState`                  | `true`       | 🔒  | 是否缓存 readOnly/autoCommit 状态以减少数据库查询；若直接操作底层连接修改了这些状态，应设为 false                               |                     |
-| `enableAutoCommitOnReturn`    | `true`       | 🔒  | 连接归还时若 autoCommit=false，是否自动重置为 true                                                         |                     |
-| `rollbackOnReturn`            | `true`       | 🔒  | 连接归还时若 autoCommit=false 且非只读，是否自动 rollback                                                   | [5](#0-4) [6](#0-5) |
+| 参数                            | 默认值          | 选择   | 说明                                                                                           |                     |
+| ----------------------------- | ------------ | ---- | -------------------------------------------------------------------------------------------- | ------------------- |
+| `defaultAutoCommit`           | 驱动默认         | 🔒默认 | 连接的默认 auto-commit 状态，未设置则不调用 `setAutoCommit`                                                 |                     |
+| `defaultReadOnly`             | 驱动默认         | 🔒默认 | 连接的默认只读状态，未设置则不调用 `setReadOnly`                                                              |                     |
+| `defaultTransactionIsolation` | 驱动默认         | 🔒默认 | 默认事务隔离级别：`NONE` / `READ_COMMITTED` / `READ_UNCOMMITTED` / `REPEATABLE_READ` / `SERIALIZABLE` |                     |
+| `defaultCatalog`              | —            | 🔒默认 | 连接的默认 catalog                                                                                |                     |
+| `defaultSchema`               | —            | 🔒默认 | 连接的默认 schema                                                                                 |                     |
+| `defaultQueryTimeout`         | `null`（驱动默认） | 🔒默认 | Statement 的默认查询超时（秒），null 表示使用驱动默认                                                           |                     |
+| `cacheState`                  | `true`       | 🔒默认 | 是否缓存 readOnly/autoCommit 状态以减少数据库查询；若直接操作底层连接修改了这些状态，应设为 false                               |                     |
+| `enableAutoCommitOnReturn`    | `true`       | 🔒默认 | 连接归还时若 autoCommit=false，是否自动重置为 true                                                         |                     |
+| `rollbackOnReturn`            | `true`       | 🔒默认 | 连接归还时若 autoCommit=false 且非只读，是否自动 rollback                                                   | [5](#0-4) [6](#0-5) |
 以下只发生在 connection 第一次创建完成时：
 
-| 参数                   | 默认值    | 说明                              |                         |
-| -------------------- | ------ | ------------------------------- | ----------------------- |
-| `connectionInitSqls` | `null` | 物理连接首次创建时执行的 SQL 列表（分号分隔），仅执行一次 | [17](#0-16) [18](#0-17) |
+| 参数                   | 默认值    | 选择   | 说明                              |                         |
+| -------------------- | ------ | ---- | ------------------------------- | ----------------------- |
+| `connectionInitSqls` | `null` | 🔒默认 | 物理连接首次创建时执行的 SQL 列表（分号分隔），仅执行一次 | [17](#0-16) [18](#0-17) |
 - 注意`connectionInitSqls`不是说开始执行`SELECT 1`，应用场景更多是初始化连接状态
 	- 设置自动提交：`SET autocommit=1`
 	- 设置时区：`SET time_zone= '+08:00'`
