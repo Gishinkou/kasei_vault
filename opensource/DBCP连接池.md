@@ -54,6 +54,9 @@
 		- [TODO: fastFailValidation, disconnectionSqlCodes, `disconnectionIgnoreSqlCodes`]`fastFailValidation=true` 只有与 SQLState 分类配置联动时，才会把“已判定断连”的连接在后续验证时直接 fail fast。
 - 归还连接状态保留
 	- `rollbackOnReturn` 默认 true、`autoCommitOnReturn` 默认 true、`cacheState` 默认 true
+		- `autoCommitOnReturn`不是配置而是一个状态记录。
+		- `rollbackOnReturn`为true时，会回滚未提交事务。因为此时理论上，上层业务调用已经调了close，丢失了对这个连接的引用。这个连接务必要回收掉。
+		- `cacheState`的作用是把`autoCommit/readOnly`的状态记录在本地，而不用和数据库进行网络IO。
 ---
 
 ## 四、连接验证
