@@ -54,7 +54,14 @@
 	- 创建并初始化连接返回(connectionTimeout, connectionInitSql)
 - 还连接过程（close()方法)
 	- 默认关闭statement，rollback()未提交事务
-	
+	```
+	`close()` 不是真的关闭物理连接，而是：
+		1. 清理 statements
+		2. rollback 脏事务
+		3. reset connection state
+		4. 取消 leak task
+		5. 把 `PoolEntry` 还给 pool
+	```
 - 空闲治理与保活行为：
 	- `HouseKeeper`是**全局定时任务**，定期扫描Idle连接，对待驱逐连接做标记
 		- 主要根据`idleTimeout`、`minimumIdle`做驱逐操作
