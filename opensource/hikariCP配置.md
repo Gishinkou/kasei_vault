@@ -52,7 +52,8 @@
 		- 如果是，则执行探活语句，根据探活语句结果重试(validationTimeout, connectionTestQuery)
 		- （上次访问已超过内部的 `aliveBypassWindow` 且 `isConnectionDead()` 返回真）
 	- 创建并初始化连接返回(connectionTimeout, connectionInitSql)
--
+- 还连接过程（close()方法)
+	- 默认关闭statement，rollback()未提交
 ---
 
 ## 五、连接行为
