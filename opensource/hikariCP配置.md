@@ -100,6 +100,10 @@
 	  - 成功则 unreserve 放回
 	  - 失败则关闭并补连接
   ```
+
+- 探活时机整理：
+	- `getConnection()`：借出连接时，会根据距离上次探活的事件大于`aliveBypassWindowMs`
+
 ---
 
 ## 五、连接行为
