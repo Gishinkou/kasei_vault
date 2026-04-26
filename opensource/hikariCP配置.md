@@ -53,7 +53,9 @@
 		- （上次访问已超过内部的 `aliveBypassWindow` 且 `isConnectionDead()` 返回真）
 	- 创建并初始化连接返回(connectionTimeout, connectionInitSql)
 - 还连接过程（close()方法)
-	- 默认关闭statement，rollback()未提交
+	- 默认关闭statement，rollback()未提交事务
+- 空闲治理与保活行为：
+	- `HouseKeeper`
 ---
 
 ## 五、连接行为
