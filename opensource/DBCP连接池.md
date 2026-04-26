@@ -4,14 +4,14 @@
 
 ## 一、JDBC 连接基础
 
-| 参数 | 默认值 | 说明 |
-|------|--------|------|
-| `username` | — | 连接数据库的用户名 |
-| `password` | — | 连接数据库的密码 |
-| `url` | — | JDBC 连接 URL |
-| `driverClassName` | — | JDBC 驱动的完整类名 |
-| `connectionFactoryClassName` | — | 自定义 `ConnectionFactory` 实现类名 |
-| `connectionProperties` | — | 传给驱动的额外连接属性，格式：`key=value;key2=value2`（user/password 无需包含） | [3](#0-2) [4](#0-3) 
+| 参数                           | 默认值 | 选择  | 说明                                                         |                     |
+| ---------------------------- | --- | --- | ---------------------------------------------------------- | ------------------- |
+| `username`                   | —   |     | 连接数据库的用户名                                                  |                     |
+| `password`                   | —   |     | 连接数据库的密码                                                   |                     |
+| `url`                        | —   |     | JDBC 连接 URL                                                |                     |
+| `driverClassName`            | —   |     | JDBC 驱动的完整类名                                               |                     |
+| `connectionFactoryClassName` | —   |     | 自定义 `ConnectionFactory` 实现类名                               |                     |
+| `connectionProperties`       | —   |     | 传给驱动的额外连接属性，格式：`key=value;key2=value2`（user/password 无需包含） | [3](#0-2) [4](#0-3) |
 
 ---
 
