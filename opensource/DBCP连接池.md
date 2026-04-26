@@ -174,6 +174,12 @@
 | `disconnectionIgnoreSqlCodes` | `null`  | 逗号分隔的 SQL State 码列表，即使匹配致命条件也忽略（需 `fastFailValidation=true`，since 2.13.0） | [19](#0-18) [20](#0-19) |
 - `fastfail`机制
 	- **如何在“连接已经坏掉”的情况下，避免再做一次无意义的验证**
+	- `disconnectionSqlCodes`是一些预定义的SQL states码列表，如
+		- disconnectionSqlCodes = "08S01,08003,08006,..."
+		- 08S01 -> communication link failure  
+		- 08003 -> connection does not exist  
+		- 08006 -> connection failure
+	- 出现这种指向连接不可用的SQLException，则直接
 
 ---
 
