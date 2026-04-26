@@ -231,7 +231,27 @@ PROP_SOCKET_TIMEOUT,
 | `phyTimeoutMillis`              | long    | -1（不限）        |             | 物理连接的最大存活时间（毫秒）                      |
 | `phyMaxUseCount`                | long    | -1（不限）        |             | 物理连接最大使用次数                           |
 - DestroyTask定时维护空闲线程状态
-	- 
+- 决策流程：
+- ```
+  1. 物理连接是否太老？
+   phyTimeoutMillis 命中 => close
+
+2. 物理连接使用次数是否太多？
+   phyMaxUseCount 命中 => close
+
+3. idle 是否超过 maxEvictableIdleTimeMillis？
+   命中 => 强制 close
+
+4. idle 是否超过 minEvictableIdleTimeMillis？
+   如果 idle 数量超过 minIdle => close
+   如果需要保留 minIdle 且 keepAlive=true => 探活保活
+
+5. idle 是否超过 keepAliveBetweenTimeMillis？
+   keepAlive=true 时，可能执行保活探测
+
+6. 都不满足
+   保留
+  ```
 ---
 
 ## 六、超时配置（5 项）
