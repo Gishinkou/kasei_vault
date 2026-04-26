@@ -129,13 +129,13 @@
 
 ## 六、废弃连接处理（Abandoned Connection）
 
-| 参数                             | 默认值      |     | 说明                                                     |                         |
-| ------------------------------ | -------- | --- | ------------------------------------------------------ | ----------------------- |
-| `removeAbandonedOnBorrow`      | `false`  |     | 借用连接时若满足条件（活跃数 > maxTotal-3 且空闲数 < 2）则清理废弃连接           |                         |
-| `removeAbandonedOnMaintenance` | `false`  |     | 驱逐线程运行结束后清理废弃连接（需 `timeBetweenEvictionRunsMillis` > 0） |                         |
-| `removeAbandonedTimeout`       | `300`（秒） |     | 连接超过此秒数未使用则视为废弃（执行 Statement 会重置计时）                    |                         |
-| `logAbandoned`                 | `false`  |     | 是否记录废弃连接/Statement 的堆栈信息（有性能开销）                        |                         |
-| `abandonedUsageTracking`       | `false`  |     | 是否记录每次方法调用的堆栈以辅助调试废弃连接（开销显著）                           | [13](#0-12) [14](#0-13) |
+| 参数                             | 默认值      |           | 说明                                                     |                         |
+| ------------------------------ | -------- | --------- | ------------------------------------------------------ | ----------------------- |
+| `removeAbandonedOnBorrow`      | `false`  | 🔄功能总开关待定 | 借用连接时若满足条件（活跃数 > maxTotal-3 且空闲数 < 2）则清理废弃连接           |                         |
+| `removeAbandonedOnMaintenance` | `false`  | 🔄待定      | 驱逐线程运行结束后清理废弃连接（需 `timeBetweenEvictionRunsMillis` > 0） |                         |
+| `removeAbandonedTimeout`       | `300`（秒） | 🔄        | 连接超过此秒数未使用则视为废弃（执行 Statement 会重置计时）                    |                         |
+| `logAbandoned`                 | `false`  | 🔄        | 是否记录废弃连接/Statement 的堆栈信息（有性能开销）                        |                         |
+| `abandonedUsageTracking`       | `false`  | 🔄        | 是否记录每次方法调用的堆栈以辅助调试废弃连接（开销显著）                           | [13](#0-12) [14](#0-13) |
 
 - 如何定义废弃连接，废弃连接有什么问题
 	- 废弃连接是**连接已经借出**，但**长时间没有归还**。这主要有连接泄露的风险。
@@ -152,12 +152,12 @@
 
 ## 七、PreparedStatement 池化
 
-| 参数                           | 默认值     | 说明                                                |                         |
-| ---------------------------- | ------- | ------------------------------------------------- | ----------------------- |
-| `poolPreparedStatements`     | `false` | 是否启用 PreparedStatement 池化（同时包含 CallableStatement） |                         |
-| `maxOpenPreparedStatements`  | 无限制     | Statement 池中最大同时开放的 Statement 数，负数表示无限制           |                         |
-| `clearStatementPoolOnReturn` | `false` | 连接归还时是否清空其 Statement 池                            | [15](#0-14) [16](#0-15) |
-|                              |         |                                                   |                         |
+| 参数                           | 默认值     | 选择    | 说明                                                |                         |
+| ---------------------------- | ------- | ----- | ------------------------------------------------- | ----------------------- |
+| `poolPreparedStatements`     | `false` | ✅保持开启 | 是否启用 PreparedStatement 池化（同时包含 CallableStatement） |                         |
+| `maxOpenPreparedStatements`  | 无限制     | ✅保持50 | Statement 池中最大同时开放的 Statement 数，负数表示无限制           |                         |
+| `clearStatementPoolOnReturn` | `false` | ✅保持   | 连接归还时是否清空其 Statement 池                            | [15](#0-14) [16](#0-15) |
+|                              |         |       |                                                   |                         |
 - PreparedStatement池化的作用范围
 	- 这是一个`connection`层级的缓存池，而不是应用全局的。
 	- 也就是每个连接都会有一个自己的缓存池。连接数为100就是100倍缓存池。
