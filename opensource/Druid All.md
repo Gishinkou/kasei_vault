@@ -102,32 +102,33 @@ PROP_SOCKET_TIMEOUT,
 
 ## 一、基础连接配置(9项)
 
-| 配置项                           | 类型         | 默认值        | 说明                                                    |
-| ----------------------------- | ---------- | ---------- | ----------------------------------------------------- |
-| `url`                         | String     | null       | JDBC 连接 URL                                           |
-| `username`                    | String     | null       | 数据库用户名                                                |
-| `password`                    | String     | null       | 数据库密码                                                 |
-| `driverClassName`             | String     | null（自动检测） | JDBC 驱动类名                                             |
-| `connectProperties`           | Properties | 空          | 传递给 JDBC 驱动的额外属性                                      |
-| `defaultAutoCommit`           | boolean    | true       | 连接默认自动提交状态                                            |
-| `defaultReadOnly`             | Boolean    | null       | 连接默认只读状态                                              |
-| `defaultTransactionIsolation` | Integer    | null       | 默认事务隔离级别                                              |
-| `defaultCatalog`              | String     | null       | 默认 catalog （catalog 就是 schema/database，SQL 不写库名时的默认值） |
+| 配置项                           | 类型         | 默认值        | 选择   | 说明                                                    |
+| ----------------------------- | ---------- | ---------- | ---- | ----------------------------------------------------- |
+| `url`                         | String     | null       | ✅保持  | JDBC 连接 URL                                           |
+| `username`                    | String     | null       | ✅保持  | 数据库用户名                                                |
+| `password`                    | String     | null       | ✅保持  | 数据库密码                                                 |
+| `driverClassName`             | String     | null（自动检测） | 🔒默认 | JDBC 驱动类名                                             |
+| `connectProperties`           | Properties | 空          | 🔒默认 | 传递给 JDBC 驱动的额外属性                                      |
+| `defaultAutoCommit`           | boolean    | true       | 🔒默认 | 连接默认自动提交状态                                            |
+| `defaultReadOnly`             | Boolean    | null       | 🔒默认 | 连接默认只读状态                                              |
+| `defaultTransactionIsolation` | Integer    | null       | 🔒默认 | 默认事务隔离级别                                              |
+| `defaultCatalog`              | String     | null       | 🔒默认 | 默认 catalog （catalog 就是 schema/database，SQL 不写库名时的默认值） |
+|                               |            |            |      |                                                       |
 
 ---
 
 ## 二、连接池大小配置（6 项）
 
-| 配置项                        | 类型   | 默认值    | 说明                 | 本文覆盖 |
-| -------------------------- | ---- | ------ | ------------------ | ---- |
-| `initialSize`              | int  | 0      | 启动时初始化的连接数         |      |
-| `maxActive`                | int  | 8      | 最大活跃连接数            |      |
-| `minIdle`                  | int  | 0      | 最小空闲连接数            |      |
-| `maxIdle`                  | int  | 8      | 【完全废弃】getter 无任何引用 | ✅    |
-| `maxWait`                  | long | -1（不限） | 获取连接的最大等待时间（毫秒）    | ✅    |
-| `notFullTimeoutRetryCount` | int  | 0      | 连接池满时的重试次数         |      |
-|                            |      |        |                    |      |
-|                            |      |        |                    |      |
+| 配置项                        | 类型   | 默认值    | 选择      | 说明                 |
+| -------------------------- | ---- | ------ | ------- | ------------------ |
+| `initialSize`              | int  | 0      | 🔄需要考虑  | 启动时初始化的连接数         |
+| `maxActive`                | int  | 8      | 🔄动态决定  | 最大活跃连接数            |
+| `minIdle`                  | int  | 0      | 🔄确定默认值 | 最小空闲连接数            |
+| `maxIdle`                  | int  | 8      | ✅保持     | 【完全废弃】getter 无任何引用 |
+| `maxWait`                  | long | -1（不限） | ✅保持2000 | 获取连接的最大等待时间（毫秒）    |
+| `notFullTimeoutRetryCount` | int  | 0      | 🔒默认    | 连接池满时的重试次数         |
+|                            |      |        |         |                    |
+|                            |      |        |         |                    |
 - maxIdle 完全无任何引用，纯粹是 dbcp 拿过来的无用选项
 - notFullTimeoutRetryCount：这是一个在**连接池没满**的情况下，拿连接失败后自动重试的机制
 - [问题 1] druid 创建连接是一个 try 方法，封装了哪些细节，失败的时候会做什么。
@@ -161,16 +162,16 @@ PROP_SOCKET_TIMEOUT,
 
 ## 三、连接验证配置（7 项）
 
-| 配置项                      | 类型                     | 默认值           | 说明                  |
-| ------------------------ | ---------------------- | ------------- | ------------------- |
-| `validationQuery`        | String                 | null          | 用于验证连接有效性的 SQL      |
-| `validationQueryTimeout` | int                    | -1            | 验证查询超时时间（秒）         |
-| `testOnBorrow`           | boolean                | false         | 借出连接时是否验证           |
-| `testOnReturn`           | boolean                | false         | 归还连接时是否验证           |
-| `testWhileIdle`          | boolean                | true          | 空闲时是否验证连接           |
-| `validConnectionChecker` | ValidConnectionChecker | null（DB 自动适配） | 自定义连接验证实现           |
-| `useUnfairLock`          | boolean                | true          | 是否使用非公平锁获取连接【默认非公平】 |
-|                          |                        |               |                     |
+| 配置项                      | 类型                     | 默认值           |                                | 说明                    |
+| ------------------------ | ---------------------- | ------------- | ------------------------------ | --------------------- |
+| `validationQuery`        | String                 | null          | ✅保持                            | 用于验证连接有效性的 SQL，不写有默认值 |
+| `validationQueryTimeout` | int                    | -1            | 🔄可以设一个值，虽然不设会被socketTimeout兜底 | 验证查询超时时间（秒）           |
+| `testOnBorrow`           | boolean                | false         | 🔄同步位点探活，是否开启                  | 借出连接时是否验证             |
+| `testOnReturn`           | boolean                | false         | 🔄同步位点探活，是否开启                  | 归还连接时是否验证             |
+| `testWhileIdle`          | boolean                | true          | 🔄异步定时探活任务                     | 空闲时是否验证连接             |
+| `validConnectionChecker` | ValidConnectionChecker | null（DB 自动适配） | 🔒默认                           | 自定义连接验证实现             |
+| `useUnfairLock`          | boolean                | true          | 🔒默认                           | 是否使用非公平锁获取连接【默认非公平】   |
+|                          |                        |               |                                |                       |
 - 关键[useUnfairLock] 1.2.22 之后删除了和 maxWait 的联动。 1.2.22  之前，maxWait 启用时，会默认采取**公平锁**，而公平锁会降低并发效率。
 	- 【1.2.22 之前】需要配置 maxWait 和 useUnfairLock=true
 	- 【1.2.22 之后】只需配置 maxWait, useUnfaiLock 默认为true。
@@ -199,13 +200,22 @@ PROP_SOCKET_TIMEOUT,
 
 ## 四、PreparedStatement 缓存配置（4 项）
 
-|配置项|类型|默认值|说明|
-|---|---|---|---|
-|`poolPreparedStatements`|boolean|false|是否开启 PreparedStatement 缓存|
-|`sharePreparedStatements`|boolean|false|是否在连接间共享 PreparedStatement|
-|`maxPoolPreparedStatementPerConnectionSize`|int|10|每个连接最多缓存的 PreparedStatement 数量|
-|`maxOpenPreparedStatements`|int|-1|同上（别名）|
-
+| 配置项                                         | 类型      | 默认值   | 选择      | 说明                             |
+| ------------------------------------------- | ------- | ----- | ------- | ------------------------------ |
+| `poolPreparedStatements`                    | boolean | false | ✅保持     | 是否开启 PreparedStatement 缓存      |
+| `sharePreparedStatements`                   | boolean | false | 🔄可考虑开启 | 是否在连接间共享 PreparedStatement     |
+| `maxPoolPreparedStatementPerConnectionSize` | int     | 10    |         | 每个连接最多缓存的 PreparedStatement 数量 |
+| `maxOpenPreparedStatements`                 | int     | -1    |         | 同上（别名）                         |
+- 这里对`PreparedStatement`做的**池化**到底解决什么问题？
+	- `PreparedStatement`本身就有缓存的设计意图，一个statement预编译后只需替换参数，少走很多流程
+		- 但其问题在于，它不能**跨调用复用**，通常只是一个业务方法里的多个参数之间生效。
+		- 将其池化，可以在多次调用之间复用，减少编译成本。
+	- 需要区分：`preparedStatement`的缓存是**发生在client侧**还是**server侧**。
+		- `JDBC connector`实现中，默认是关闭服务侧缓存的（`useServerPrepStmts`=false)
+		- 也就是说，不考虑池化时，preparedStatement 本身的作用，主要是JVM逻辑成本，这包括拼SQL，替换参数，设置执行前的一些上下文信息等。
+		- 池化后则是进一步跨调用优化这层成本。
+- Druid 里 `sharePreparedStatements`是否值得额外考虑
+	- 是，因为 sharePreparedStatements 在连接层级之上进一步提供了 `PreparedStatement`的缓存，进一步提升了 client 侧缓存的效果。
 ---
 
 ## 五、连接驱逐与保活配置（8 项）
