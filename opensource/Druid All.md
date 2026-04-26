@@ -200,12 +200,12 @@ PROP_SOCKET_TIMEOUT,
 
 ## 四、PreparedStatement 缓存配置（4 项）
 
-| 配置项                                         | 类型      | 默认值   | 选择      | 说明                             |
-| ------------------------------------------- | ------- | ----- | ------- | ------------------------------ |
-| `poolPreparedStatements`                    | boolean | false | ✅保持     | 是否开启 PreparedStatement 缓存      |
-| `sharePreparedStatements`                   | boolean | false | 🔄可考虑开启 | 是否在连接间共享 PreparedStatement     |
-| `maxPoolPreparedStatementPerConnectionSize` | int     | 10    |         | 每个连接最多缓存的 PreparedStatement 数量 |
-| `maxOpenPreparedStatements`                 | int     | -1    |         | 同上（别名）                         |
+| 配置项                                         | 类型      | 默认值   | 选择              | 说明                             |
+| ------------------------------------------- | ------- | ----- | --------------- | ------------------------------ |
+| `poolPreparedStatements`                    | boolean | false | ✅保持             | 是否开启 PreparedStatement 缓存      |
+| `sharePreparedStatements`                   | boolean | false | 🔒默认【会有全局同步锁代价】 | 是否在连接间共享 PreparedStatement     |
+| `maxPoolPreparedStatementPerConnectionSize` | int     | 10    | ✅保持50           | 每个连接最多缓存的 PreparedStatement 数量 |
+| `maxOpenPreparedStatements`                 | int     | -1    |                 | 同上（别名）                         |
 - 这里对`PreparedStatement`做的**池化**到底解决什么问题？
 	- `PreparedStatement`本身就有缓存的设计意图，一个statement预编译后只需替换参数，少走很多流程
 		- 但其问题在于，它不能**跨调用复用**，通常只是一个业务方法里的多个参数之间生效。
@@ -220,16 +220,16 @@ PROP_SOCKET_TIMEOUT,
 
 ## 五、连接驱逐与保活配置（8 项）
 
-|配置项|类型|默认值|说明|
-|---|---|---|---|
-|`timeBetweenEvictionRunsMillis`|long|60000（1分钟）|驱逐线程运行间隔（毫秒）|
-|`numTestsPerEvictionRun`|int|3|每次驱逐检测的连接数|
-|`minEvictableIdleTimeMillis`|long|1800000（30分钟）|连接最小空闲时间，超过才可被驱逐（毫秒）|
-|`maxEvictableIdleTimeMillis`|long|25200000（7小时）|连接最大空闲时间，超过强制驱逐（毫秒）|
-|`keepAlive`|boolean|false|是否开启连接保活|
-|`keepAliveBetweenTimeMillis`|long|120000（2分钟）|保活检测间隔（毫秒）|
-|`phyTimeoutMillis`|long|-1（不限）|物理连接的最大存活时间（毫秒）|
-|`phyMaxUseCount`|long|-1（不限）|物理连接最大使用次数|
+| 配置项                             | 类型      | 默认值           |     | 说明                   |
+| ------------------------------- | ------- | ------------- | --- | -------------------- |
+| `timeBetweenEvictionRunsMillis` | long    | 60000（1分钟）    |     | 驱逐线程运行间隔（毫秒）         |
+| `numTestsPerEvictionRun`        | int     | 3             |     | 每次驱逐检测的连接数           |
+| `minEvictableIdleTimeMillis`    | long    | 1800000（30分钟） |     | 连接最小空闲时间，超过才可被驱逐（毫秒） |
+| `maxEvictableIdleTimeMillis`    | long    | 25200000（7小时） |     | 连接最大空闲时间，超过强制驱逐（毫秒）  |
+| `keepAlive`                     | boolean | false         |     | 是否开启连接保活             |
+| `keepAliveBetweenTimeMillis`    | long    | 120000（2分钟）   |     | 保活检测间隔（毫秒）           |
+| `phyTimeoutMillis`              | long    | -1（不限）        |     | 物理连接的最大存活时间（毫秒）      |
+| `phyMaxUseCount`                | long    | -1（不限）        |     | 物理连接最大使用次数           |
 
 ---
 
