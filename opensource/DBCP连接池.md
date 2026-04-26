@@ -58,8 +58,7 @@
 - 借连接【借用时做很多事，热路径比较重，行为比较显式】：
 	- `maxTotal`，`maxWaitMillis`在最大数量和最大耗时上控制获取连接是否失败。超容量则进入阻塞等待，阻塞等待时间达到上限就放弃报错。
 	- 发生借用校验`testOnBorrow`，接下来会尝试执行`validationQuery`（默认null）和`validationQueryTimeout`（默认无超时）。
-		- 泄露回收`removeAbandonedOnBorrow`默认是false，`removeAbandonedTimeout`是默认是300秒。关于泄露回收，还有两个日志、追踪选项`logAbandoned`和`abandonedUsageTracking`。
-		- 同时做**
+	- 同时做**废弃连接（泄露连接）回收**
 - 归还连接时的事务状态残留问题
 	- `rollbackOnReturn` 默认 true、`autoCommitOnReturn` 默认 true、`cacheState` 默认 true
 		- `autoCommitOnReturn`不是配置而是一个状态记录。
