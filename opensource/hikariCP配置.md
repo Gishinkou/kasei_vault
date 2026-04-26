@@ -186,15 +186,22 @@
 
 > 官方明确声明：这些属性随时可能消失，不要开 issue。
 
-| 系统属性 | 说明 |
-|---|---|
-| `com.zaxxer.hikari.blockUntilFilled` | 为 `true` 且 `initializationFailTimeout > 1` 时，启动时阻塞直到池完全填满 |
-| `com.zaxxer.hikari.enableRequestBoundaries` | 为 `true` 时，在连接获取/归还时调用 `Connection.beginRequest()` / `endRequest()` |
-| `com.zaxxer.hikari.housekeeping.period` | 控制内部 housekeeping 线程的执行频率（ms），**不要修改** |
-| `com.zaxxer.hikari.legacy.supportUserPassDataSourceOverride` | 为 `true` 时支持旧版 `getUsername()/getPassword()` 覆盖行为（新版推荐用 `getCredentials()`） |
-| `com.zaxxer.hikari.useWeakReferences` | 为 `true` 时强制 `ConcurrentBag` 使用 `WeakReference`，避免 Tomcat 热部署警告 |
-| `com.zaxxer.hikari.timeoutMs.floor` | 超时时间的最小下限（ms），默认 250，影响 `connectionTimeout` 和 `validationTimeout` 的校验 | [19](#0-18) [20](#0-19) 
-
+| 系统属性                                                         | 说明                                                                          |                         |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------- | ----------------------- |
+| `com.zaxxer.hikari.aliveBypassWindowMs`                      | 连接存活检查的跳过窗口时间                                                               |                         |
+| `com.zaxxer.hikari.blockUntilFilled`                         | 为 `true` 且 `initializationFailTimeout > 1` 时，启动时阻塞直到池完全填满                   |                         |
+| `com.zaxxer.hikari.enableRequestBoundaries`                  | 为 `true` 时，在连接获取/归还时调用 `Connection.beginRequest()` / `endRequest()`         |                         |
+| `com.zaxxer.hikari.housekeeping.period`                      | 控制内部 housekeeping 线程的执行频率（ms），**不要修改**                                      |                         |
+| `com.zaxxer.hikari.legacy.supportUserPassDataSourceOverride` | 为 `true` 时支持旧版 `getUsername()/getPassword()` 覆盖行为（新版推荐用 `getCredentials()`） |                         |
+| `com.zaxxer.hikari.useWeakReferences`                        | 为 `true` 时强制 `ConcurrentBag` 使用 `WeakReference`，避免 Tomcat 热部署警告             |                         |
+| `com.zaxxer.hikari.timeoutMs.floor`                          | 超时时间的最小下限（ms），默认 250，影响 `connectionTimeout` 和 `validationTimeout` 的校验       | [19](#0-18) [20](#0-19) |
+| **`com.zaxxer.hikari.lifeTimeVarianceFactor`**               | 控制连接最大生命时间的方差因子，默认4。【可能影响】                                                  |                         |
+|                                                              |                                                                             |                         |
+|                                                              |                                                                             |                         |
+- 【以上特殊配置里有一些重要配置】
+	- `aliveBypassWindowMs`：跳过保活的时间窗口，默认500ms，这代表着每个连接探活sql的最小执行间隔
+	- blockUntilFilled：实现某种连接池同步初始化的能力
+	- **`com.zaxxer.hikari.lifeTimeVarianceFactor`**：可能可以更分散地打散最大存活时间，防止连接统一重建带来的周期性性能抖动
 ---
 
 ## 运行时可变属性汇总（通过 `HikariConfigMXBean` / JMX）
