@@ -55,8 +55,8 @@
 - 还连接过程（close()方法)
 	- 默认关闭statement，rollback()未提交事务
 - 空闲治理与保活行为：
-	- `HouseKeeper`定期扫描Idle连接，对待驱逐连接做标记
-	- `keepalive`是**
+	- `HouseKeeper`是**全局定时任务**，定期扫描Idle连接，对待驱逐连接做标记
+	- `keepalive`是**连接级的定时任务**，定时后连接会临时移出池，ping 一下，再放回池
 ---
 
 ## 五、连接行为
