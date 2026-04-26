@@ -49,11 +49,10 @@
 - 借连接过程：
 	- 首先看连接是否被标记驱逐
 	- 看连接距离上次探活是否超过了一个窗口时间
-		- 如果是，则执行探活语句，根据探活语句结果重试
+		- 如果是，则执行探活语句，根据探活语句结果重试(validationTimeout, connectionTestQuery)
 		- （上次访问已超过内部的 `aliveBypassWindow` 且 `isConnectionDead()` 返回真）
-	- 创建并初始化连接返回
-- 涉及到的配置：
-	- 
+	- 创建并初始化连接返回(connectionTimeout, connectionInitSql)
+-
 ---
 
 ## 五、连接行为
