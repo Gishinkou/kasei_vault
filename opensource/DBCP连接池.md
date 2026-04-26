@@ -152,12 +152,12 @@
 
 ## 七、PreparedStatement 池化
 
-| 参数                           | 默认值     | 选择    | 说明                                                |                         |
-| ---------------------------- | ------- | ----- | ------------------------------------------------- | ----------------------- |
-| `poolPreparedStatements`     | `false` | ✅保持开启 | 是否启用 PreparedStatement 池化（同时包含 CallableStatement） |                         |
-| `maxOpenPreparedStatements`  | 无限制     | ✅保持50 | Statement 池中最大同时开放的 Statement 数，负数表示无限制           |                         |
-| `clearStatementPoolOnReturn` | `false` | ✅保持   | 连接归还时是否清空其 Statement 池                            | [15](#0-14) [16](#0-15) |
-|                              |         |       |                                                   |                         |
+| 参数                           | 默认值     | 选择     | 说明                                                |                         |
+| ---------------------------- | ------- | ------ | ------------------------------------------------- | ----------------------- |
+| `poolPreparedStatements`     | `false` | ✅保持开启  | 是否启用 PreparedStatement 池化（同时包含 CallableStatement） |                         |
+| `maxOpenPreparedStatements`  | 无限制     | ✅保持50  | Statement 池中最大同时开放的 Statement 数，负数表示无限制           |                         |
+| `clearStatementPoolOnReturn` | `false` | ✅保持不关闭 | 连接归还时是否清空其 Statement 池                            | [15](#0-14) [16](#0-15) |
+|                              |         |        |                                                   |                         |
 - PreparedStatement池化的作用范围
 	- 这是一个`connection`层级的缓存池，而不是应用全局的。
 	- 也就是每个连接都会有一个自己的缓存池。连接数为100就是100倍缓存池。
@@ -180,11 +180,11 @@
 
 ## 八、快速失败验证（Fast Fail Validation）
 
-| 参数                            | 默认值     | 说明                                                                        |                         |
-| ----------------------------- | ------- | ------------------------------------------------------------------------- | ----------------------- |
-| `fastFailValidation`          | `false` | 对已抛出"致命" SQLException 的连接，验证立即失败，不再调用 `isValid` 或执行验证 SQL                 |                         |
-| `disconnectionSqlCodes`       | `null`  | 逗号分隔的 SQL State 码列表，视为致命断连错误（需 `fastFailValidation=true`）                 |                         |
-| `disconnectionIgnoreSqlCodes` | `null`  | 逗号分隔的 SQL State 码列表，即使匹配致命条件也忽略（需 `fastFailValidation=true`，since 2.13.0） | [19](#0-18) [20](#0-19) |
+| 参数                            | 默认值     | 选择      | 说明                                                                        |                         |
+| ----------------------------- | ------- | ------- | ------------------------------------------------------------------------- | ----------------------- |
+| `fastFailValidation`          | `false` | 🔄可考虑开启 | 对已抛出"致命" SQLException 的连接，验证立即失败，不再调用 `isValid` 或执行验证 SQL                 |                         |
+| `disconnectionSqlCodes`       | `null`  | 🔄可考虑开启 | 逗号分隔的 SQL State 码列表，视为致命断连错误（需 `fastFailValidation=true`）                 |                         |
+| `disconnectionIgnoreSqlCodes` | `null`  | 🔄应该没用  | 逗号分隔的 SQL State 码列表，即使匹配致命条件也忽略（需 `fastFailValidation=true`，since 2.13.0） | [19](#0-18) [20](#0-19) |
 - `fastfail`机制
 	- **如何在“连接已经坏掉”的情况下，避免再做一次无意义的验证**
 	- `disconnectionSqlCodes`是一些预定义的SQL states码列表，如
