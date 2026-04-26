@@ -225,7 +225,7 @@ PROP_SOCKET_TIMEOUT,
 | `timeBetweenEvictionRunsMillis` | long    | 60000（1分钟）    | ✅保持60秒      | 驱逐线程运行间隔（毫秒）                         |
 | `numTestsPerEvictionRun`        | int     | 3             | 🔄需要根据连接数计算 | 每次驱逐检测的连接数                           |
 | `minEvictableIdleTimeMillis`    | long    | 1800000（30分钟） | ✅保持 5分钟     | 连接最小空闲时间，超过才可被驱逐（毫秒）                 |
-| `maxEvictableIdleTimeMillis`    | long    | 25200000（7小时） |             | 【强制驱逐，不考虑minIdle】连接最大空闲时间，超过强制驱逐（毫秒） |
+| `maxEvictableIdleTimeMillis`    | long    | 25200000（7小时） | 🔄是否保持      | 【强制驱逐，不考虑minIdle】连接最大空闲时间，超过强制驱逐（毫秒） |
 | `keepAlive`                     | boolean | false         | ✅保持开启       | 是否开启连接保活                             |
 | `keepAliveBetweenTimeMillis`    | long    | 120000（2分钟）   |             | 保活检测间隔（毫秒）                           |
 | `phyTimeoutMillis`              | long    | -1（不限）        |             | 物理连接的最大存活时间（毫秒）                      |
