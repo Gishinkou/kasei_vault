@@ -69,11 +69,6 @@
 	- 归还时首先做`testOnReturn`检验，检验失败后会触发`ensureIdle(1,false)`来对最小空闲连接数进行确保。
 		- 注意这里有一个`maxIdle`的概念，如果归还的连接数超过了`maxIdle`，会触发销毁而不是回到idle deque。
 		- 注意这里的`ensureIdle`的第一个参数是最小连接数预期，也就是说，`testOnReturn`只确保至少一个空闲连接存在。 
-	- 归还时的连接存活时间检验机制：
-		- 有两个配置：（软规则）`softMinEvictableIdleTimeMillis`和 （硬规则）`minEvictableIdleTimeMillis`
-			- 硬限制可能导致连接被清除到`minIdle`以下，而软限制只在连接数超越`minIdle`时可以生效。**软限制的语义是允许提前清理**
-			- **软限制**的时间**短**于**硬限制**
-			- 多余连接提早被清除，而最小连接数保活30分钟。
 - LIFO：先来后出这样一个限制实际实现了冷热分层。
 	- 新连接被频繁复用，老连接则一直闲置
 	- 定期的 驱逐会发生在老连接上。
@@ -119,7 +114,13 @@
 	- 开关打开后：会启动一个`后台线程（Evictor）`，周期性地扫描`idle`连接。（注意只驱逐idle连接）。
 	- 运行期间：有一个关键的**批量参数**，是一个`numTestsPerEvictionRun`，这是一种**渐进式扫描**，而不是全量的。
 	- 【关键】连接最大存活时间`maxConnLifetimeMillis`，默认是无限，不适合直接使用。
+	- 连接存活时间检验机制：
+		- 有两个配置：（软规则）`softMinEvictableIdleTimeMillis`和 （硬规则）`minEvictableIdleTimeMillis`
+			- 硬限制可能导致连接被清除到`minIdle`以下，而软限制只在连接数超越`minIdle`时可以生效。**软限制的语义是允许提前清理**
+			- **软限制**的时间**短**于**硬限制**
+			- 多余连接提早被清除，而最小连接数保活30分钟。
 - 注意：**和druid不同**，`minEvictableIdleTimeMillis`这个东西，不会在testOnBorrow 和 testOnReturn 时考虑进去。
+-
 ---
 
 ## 六、废弃连接处理（Abandoned Connection）
