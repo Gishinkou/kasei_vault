@@ -179,7 +179,8 @@
 		- 08S01 -> communication link failure  
 		- 08003 -> connection does not exist  
 		- 08006 -> connection failure
-	- 出现这种指向连接不可用的SQLException，则直接
+	- 出现这种指向连接不可用的SQLException，则直接标记链接损坏
+		- 对于已经表现出损坏特征的连接：避免了验证代价
 
 ---
 
