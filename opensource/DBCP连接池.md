@@ -110,6 +110,7 @@
 	- 开关打开后：会启动一个`后台线程（Evictor）`，周期性地扫描`idle`连接。（注意只驱逐idle连接）。
 	- 运行期间：有一个关键的**批量参数**，是一个`numTestsPerEvictionRun`，这是一种**渐进式扫描**，而不是全量的。
 	- 【关键】连接最大存活时间`maxConnLifetimeMillis`，默认是无限，不适合直接使用。
+- 注意：**和druid不同**，`minEvictableIdleTimeMillis`这个东西，不会在testOnBorrow 和 testOnReturn 时考虑进去。
 ---
 
 ## 六、废弃连接处理（Abandoned Connection）
