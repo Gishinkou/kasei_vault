@@ -37,18 +37,19 @@
 
 ## 四、超时与生命周期
 
-| 配置项                         | 类型        | 默认值     | 选择      | 运行时可变 | 说明                                                           | 最小值     |                     |
-| --------------------------- | --------- | ------- | ------- | ----- | ------------------------------------------------------------ | ------- | ------------------- |
-| `connectionTimeout`         | long (ms) | 30000   | ✅保持2000 | 是     | 【建连】客户端等待连接的最大时长，超时抛 `SQLException`                          | 250ms   |                     |
-| `validationTimeout`         | long (ms) | 5000    | ✅保持500  | 是     | 【keepalive】验证连接存活的最大时长，须小于 `connectionTimeout`               | 250ms   |                     |
-| `idleTimeout`               | long (ms) | 600000  | ✅保持600秒 | 是     | 空闲连接在池中的最大存活时长（仅 `minimumIdle < maximumPoolSize` 时生效），0=永不移除 | 10000ms |                     |
-| `maxLifetime`               | long (ms) | 1800000 | ✅保持30分钟 | 是     | 连接的最大生命周期，0=无限制；**强烈建议设置，且比数据库/基础设施的连接超时短几秒**                | 30000ms |                     |
-| `keepaliveTime`             | long (ms) | 120000  | ✅保持300秒 | 否     | 对空闲连接发送保活 ping 的间隔，须小于 `maxLifetime`，0=禁用                    | 30000ms |                     |
-| `leakDetectionThreshold`    | long (ms) | 0       | ✅保持默认关闭 | 是     | 【实质是给每个连接开一个定时打印任务，时间到前结束就不打了】连接借出超过此时长则记录泄漏警告，0=禁用          | 2000ms  |                     |
-| `initializationFailTimeout` | long (s)  | 1       | ✅保持1秒   | 否     | 池初始化时获取首个连接的超时；>0=阻塞等待；0=尝试验证但失败时仍启动；<0=跳过初始化直接启动            | —       | [7](#0-6) [8](#0-7) |
+| 配置项                         | 类型        | 默认值     | 选择      | 运行时可变 | 说明                                                                          | 最小值     |                     |
+| --------------------------- | --------- | ------- | ------- | ----- | --------------------------------------------------------------------------- | ------- | ------------------- |
+| `connectionTimeout`         | long (ms) | 30000   | ✅保持2000 | 是     | 【建连】客户端等待连接的最大时长，超时抛 `SQLException`                                         | 250ms   |                     |
+| `validationTimeout`         | long (ms) | 5000    | ✅保持500  | 是     | 【keepalive连接保活】验证连接存活的最大时长，须小于 `connectionTimeout`                          | 250ms   |                     |
+| `keepaliveTime`             | long (ms) | 120000  | ✅保持300秒 | 否     | 【keepalive连接保活】对空闲连接发送保活 ping 的间隔，须小于 `maxLifetime`，0=禁用                    |         |                     |
+| `idleTimeout`               | long (ms) | 600000  | ✅保持600秒 | 是     | 【housekeeper驱逐】空闲连接在池中的最大存活时长（仅 `minimumIdle < maximumPoolSize` 时生效），0=永不移除 | 10000ms |                     |
+| `maxLifetime`               | long (ms) | 1800000 | ✅保持30分钟 | 是     | 【连接定时任务】连接的最大生命周期，0=无限制；**建议设置，且比数据库/基础设施的连接超时短几秒**                         | 30000ms |                     |
+|                             |           |         |         |       |                                                                             | 30000ms |                     |
+| `leakDetectionThreshold`    | long (ms) | 0       | ✅保持默认关闭 | 是     | 【实质是给每个连接开一个定时打印任务，时间到前结束就不打了】连接借出超过此时长则记录泄漏警告，0=禁用                         | 2000ms  |                     |
+| `initializationFailTimeout` | long (s)  | 1       | ✅保持1秒   | 否     | 池初始化时获取首个连接的超时；>0=阻塞等待；0=尝试验证但失败时仍启动；<0=跳过初始化直接启动                           | —       | [7](#0-6) [8](#0-7) |
 - 借连接过程：
 	- 首先看连接是否被标记驱逐
-	- 看连接距离上次探活是否超过了一个窗口时间
+	- 看连接距离上次探活是否超过了一个窗口时间【是特殊配置项，默认500ms】
 		- 如果是，则执行探活语句，根据探活语句结果重试(validationTimeout, connectionTestQuery)
 		- （上次访问已超过内部的 `aliveBypassWindow` 且 `isConnectionDead()` 返回真）
 	- 创建并初始化连接返回(connectionTimeout, connectionInitSql)
@@ -62,6 +63,7 @@
 		4. 取消 leak task
 		5. 把 `PoolEntry` 还给 pool
 	```
+
 - 空闲治理与保活行为：
 	- `HouseKeeper`是**全局定时任务**，定期扫描Idle连接，对待驱逐连接做标记
 		- 主要根据`idleTimeout`、`minimumIdle`做驱逐操作
@@ -77,6 +79,9 @@
 		- 【reverse】其他任务 reverse 成功时（说到底什么是reverse）
 	- `keepalive`是**连接级的定时任务**，定时任务开始时，连接会临时移出池，ping 一下，可用再放回池；死了则看情况触发补连接
 		- `keepalive`不会碰**正在使用中的连接**，它对**空闲时间比较久的连接**，先**reverse()**，再做**健康检查**
+- **最大生存时间**：
+	- 通过每个连接建立时，创建一个定时任务来实现
+	- 定时任务到期时，增加驱逐标记（evicted）
 - 【补充：什么是reverse】：
 	- `reserve = CAS 把 PoolEntry 从 NOT_IN_USE → RESERVED`
 	- hikari的状态机：
@@ -99,6 +104,19 @@
 	  - 执行 isValid() 或 connectionTestQuery
 	  - 成功则 unreserve 放回
 	  - 失败则关闭并补连接
+	    
+	maxLifetime
+	- 连接创建  
+	 ↓  
+	- 按 maxLifetime - randomVariance 注册定时任务  
+	 ↓  
+	- 到期触发 MaxLifetimeTask  
+	 ↓  
+	- softEvictConnection  
+	 ↓  
+	- 空闲则立即关闭；使用中则 markEvicted  
+	 ↓  
+	- return / borrow 时消费 evicted 标记并关闭
   ```
 
 - 探活时机整理：
@@ -200,7 +218,7 @@
 |                                                              |                                                                             |                         |
 - 【以上特殊配置里有一些重要配置】
 	- `aliveBypassWindowMs`：跳过保活的时间窗口，默认500ms，这代表着每个连接探活sql的最小执行间隔
-	- blockUntilFilled：实现某种连接池同步初始化的能力
+	- blockUntilFilled：危险，但似乎可以用来实现同步初始化
 	- **`com.zaxxer.hikari.lifeTimeVarianceFactor`**：可能可以更分散地打散最大存活时间，防止连接统一重建带来的周期性性能抖动
 ---
 
