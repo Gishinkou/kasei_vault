@@ -33,15 +33,21 @@
 
 ## 三、连接池大小控制
 
-| 参数 | 默认值 | 说明 |
-|------|--------|------|
-| `initialSize` | `0` | 池启动时预创建的连接数 |
-| `maxTotal` | `8` | 池中最大活跃连接数，负数表示无限制 |
-| `maxIdle` | `8` | 池中最大空闲连接数，负数表示无限制 |
-| `minIdle` | `0` | 池中最小空闲连接数，0 表示不保留 |
-| `maxWaitMillis` | `-1`（无限等待） | 无可用连接时最长等待毫秒数，-1 表示无限等待，超时抛异常 |
-| `lifo` | `true` | true=LIFO（最近使用优先），false=FIFO 队列顺序 | [7](#0-6) [8](#0-7) 
-
+| 参数              | 默认值        | 说明                                |                     |
+| --------------- | ---------- | --------------------------------- | ------------------- |
+| `initialSize`   | `0`        | 池启动时预创建的连接数                       |                     |
+| `maxTotal`      | `8`        | 池中最大活跃连接数，负数表示无限制                 |                     |
+| `maxIdle`       | `8`        | 池中最大空闲连接数，负数表示无限制                 |                     |
+| `minIdle`       | `0`        | 池中最小空闲连接数，0 表示不保留                 |                     |
+| `maxWaitMillis` | `-1`（无限等待） | 无可用连接时最长等待毫秒数，-1 表示无限等待，超时抛异常     |                     |
+| `lifo`          | `true`     | true=LIFO（最近使用优先），false=FIFO 队列顺序 | [7](#0-6) [8](#0-7) |
+- 初始化过程：
+	- 懒加载：`BasicDataSource.getConnection()`懒初始化进入 createDataSource()
+	- 连接池初始构建：工厂先设置`poolPreparedStatements`和`maxOpenPreparedStatement`这两个参数，然后调用`createPoolableConnecitonFactory`，把其他参数一并set入。
+		- 注意其中一个参数影响工厂调用：`registerConnectionMBean`，指MBean监控关键类的注入，不开启则注入null，跳过该逻辑。
+	- 预建连接：`initialSize`一次生效（`connectionPool.addObjects(initialSize)`，调用的是底层的通用对象池里的add方法，也就是add指定数量通用对象的方法
+	- 开启池维护（保活逻辑块）：用来启动池子维护功能，但里面只设置了`setDurationBetweenEvictionRuns`和第五章空闲连接驱逐里的变量产生了关联。
+	- 
 ---
 
 ## 四、连接验证
@@ -59,15 +65,15 @@
 
 ## 五、空闲连接驱逐（Eviction）
 
-| 参数 | 默认值 | 说明 |
-|------|--------|------|
-| `timeBetweenEvictionRunsMillis` | `-1`（不运行） | 空闲驱逐线程运行间隔毫秒数，非正值则不启动驱逐线程 |
-| `numTestsPerEvictionRun` | `3` | 每次驱逐线程运行时检查的连接数 |
-| `minEvictableIdleTimeMillis` | `1800000`（30分钟） | 连接在池中空闲超过此时长（毫秒）才有资格被驱逐 |
-| `softMinEvictableIdleTimeMillis` | `-1` | 类似上项，但额外要求池中空闲连接数超过 `minIdle` 才驱逐；`minEvictableIdleTimeMillis` 优先级更高 |
-| `evictionPolicyClassName` | 默认策略 | 自定义驱逐策略的完整类名，需实现 `EvictionPolicy` 接口 |
-| `maxConnLifetimeMillis` | `-1`（无限） | 连接最大存活时长（毫秒），超过后在下次激活/钝化/验证时关闭，≤0 表示无限 |
-| `logExpiredConnections` | `true` | 是否记录因超过 `maxConnLifetimeMillis` 而被关闭的连接日志 | [11](#0-10) [12](#0-11) 
+| 参数                               | 默认值             | 说明                                                                   |                         |
+| -------------------------------- | --------------- | -------------------------------------------------------------------- | ----------------------- |
+| `timeBetweenEvictionRunsMillis`  | `-1`（不运行）       | 空闲驱逐线程运行间隔毫秒数，非正值则不启动驱逐线程                                            |                         |
+| `numTestsPerEvictionRun`         | `3`             | 每次驱逐线程运行时检查的连接数                                                      |                         |
+| `minEvictableIdleTimeMillis`     | `1800000`（30分钟） | 连接在池中空闲超过此时长（毫秒）才有资格被驱逐                                              |                         |
+| `softMinEvictableIdleTimeMillis` | `-1`            | 类似上项，但额外要求池中空闲连接数超过 `minIdle` 才驱逐；`minEvictableIdleTimeMillis` 优先级更高 |                         |
+| `evictionPolicyClassName`        | 默认策略            | 自定义驱逐策略的完整类名，需实现 `EvictionPolicy` 接口                                 |                         |
+| `maxConnLifetimeMillis`          | `-1`（无限）        | 连接最大存活时长（毫秒），超过后在下次激活/钝化/验证时关闭，≤0 表示无限                               |                         |
+| `logExpiredConnections`          | `true`          | 是否记录因超过 `maxConnLifetimeMillis` 而被关闭的连接日志                            | [11](#0-10) [12](#0-11) |
 
 ---
 
@@ -103,20 +109,20 @@
 
 ## 九、快速失败验证（Fast Fail Validation）
 
-| 参数 | 默认值 | 说明 |
-|------|--------|------|
-| `fastFailValidation` | `false` | 对已抛出"致命" SQLException 的连接，验证立即失败，不再调用 `isValid` 或执行验证 SQL |
-| `disconnectionSqlCodes` | `null` | 逗号分隔的 SQL State 码列表，视为致命断连错误（需 `fastFailValidation=true`） |
-| `disconnectionIgnoreSqlCodes` | `null` | 逗号分隔的 SQL State 码列表，即使匹配致命条件也忽略（需 `fastFailValidation=true`，since 2.13.0） | [19](#0-18) [20](#0-19) 
+| 参数                            | 默认值     | 说明                                                                        |                         |
+| ----------------------------- | ------- | ------------------------------------------------------------------------- | ----------------------- |
+| `fastFailValidation`          | `false` | 对已抛出"致命" SQLException 的连接，验证立即失败，不再调用 `isValid` 或执行验证 SQL                 |                         |
+| `disconnectionSqlCodes`       | `null`  | 逗号分隔的 SQL State 码列表，视为致命断连错误（需 `fastFailValidation=true`）                 |                         |
+| `disconnectionIgnoreSqlCodes` | `null`  | 逗号分隔的 SQL State 码列表，即使匹配致命条件也忽略（需 `fastFailValidation=true`，since 2.13.0） | [19](#0-18) [20](#0-19) |
 
 ---
 
 ## 十、JMX 监控
 
-| 参数 | 默认值 | 说明 |
-|------|--------|------|
-| `jmxName` | — | 将 DataSource 注册为 JMX MBean 的名称，需符合 JMX ObjectName 语法 |
-| `registerConnectionMBean` | `true` | 是否为每个连接注册 JMX MBean | [21](#0-20) [22](#0-21) 
+| 参数                        | 默认值    | 说明                                                   |                         |
+| ------------------------- | ------ | ---------------------------------------------------- | ----------------------- |
+| `jmxName`                 | —      | 将 DataSource 注册为 JMX MBean 的名称，需符合 JMX ObjectName 语法 |                         |
+| `registerConnectionMBean` | `true` | 是否为每个连接注册 JMX MBean                                  | [21](#0-20) [22](#0-21) |
 
 ---
 
