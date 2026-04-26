@@ -150,7 +150,7 @@
 	- 将其池化，可以在多次调用之间复用，减少编译成本。
 	- 需要区分：`preparedStatement`的缓存是**发生在client侧**还是**server侧**。
 		- `JDBC connector`实现中，默认是关闭服务侧缓存的（`useServerPrepStmts`=false)
-		- 
+		- 也就是说，不考虑池化时，preparedStatement 本身的作用，
 ---
 
 ## 八、连接初始化
