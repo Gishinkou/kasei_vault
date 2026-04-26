@@ -227,10 +227,10 @@ PROP_SOCKET_TIMEOUT,
 | `minEvictableIdleTimeMillis`    | long    | 1800000（30分钟） | ✅保持 5分钟     | 连接最小空闲时间，超过才可被驱逐（毫秒）                 |
 | `maxEvictableIdleTimeMillis`    | long    | 25200000（7小时） | 🔄是否保持      | 【强制驱逐，不考虑minIdle】连接最大空闲时间，超过强制驱逐（毫秒） |
 | `keepAlive`                     | boolean | false         | ✅保持开启       | 是否开启连接保活                             |
-| `keepAliveBetweenTimeMillis`    | long    | 120000（2分钟）   | ✅           | 保活检测间隔（毫秒）                           |
+| `keepAliveBetweenTimeMillis`    | long    | 120000（2分钟）   | ✅保持2分钟      | 保活检测间隔（毫秒）                           |
 | `phyTimeoutMillis`              | long    | -1（不限）        |             | 物理连接的最大存活时间（毫秒）                      |
 | `phyMaxUseCount`                | long    | -1（不限）        |             | 物理连接最大使用次数                           |
-- DestroyTask定时维护空闲线程状态，保活配置需要额外开启，开启后才会探活+重建连接
+- DestroyTask定时维护空闲线程状态，包括【连接驱逐和保活两部分】，这是【一个定时任务】保活配置需要额外开启，开启后才会探活+重建连接
 - 
 - 决策流程：
 - ```
