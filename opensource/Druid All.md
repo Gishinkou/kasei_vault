@@ -258,16 +258,22 @@ PROP_SOCKET_TIMEOUT,
 
 ## 六、超时配置（5 项）
 
-| 配置项                       | 类型  | 默认值               | 选择  | 说明                   |
-| ------------------------- | --- | ----------------- | --- | -------------------- |
-| `connectTimeout`          | int | 0（驱动默认）           |     | 建立连接的超时时间（毫秒）        |
-| `socketTimeout`           | int | 0（驱动默认）           |     | Socket 读写超时时间（毫秒）    |
-| `queryTimeout`            | int | 0（不限）             |     | 【SQL执行时间】默认查询超时时间（秒） |
-| `transactionQueryTimeout` | int | 0（同 queryTimeout） |     | 事务中的查询超时时间（秒）        |
-| `maxWaitThreadCount`      | int | -1（不限）            |     | 最大等待获取连接的线程数         |
-|                           |     |                   |     |                      |
-|                           |     |                   |     |                      |
+| 配置项                       | 类型  | 默认值                | 选择                       | 说明                                     |
+| ------------------------- | --- | ------------------ | ------------------------ | -------------------------------------- |
+| `connectTimeout`          | int | 0（驱动默认）【mysql 是无限】 | 🔄可考虑设位置                 | 【**主要是TCP三次握手**、MySQL握手等】建立连接的超时时间（毫秒） |
+| `socketTimeout`           | int | 0（驱动默认）【mysql 是无限】 | 🔄考虑properties和Setter的权衡 | Socket 读写超时时间（毫秒）                      |
+| `queryTimeout`            | int | 0（不限）【mysql 是无限】   | 🔒默认                     | 【SQL执行时间】默认查询超时时间（秒）                   |
+| `transactionQueryTimeout` | int | 0（同 queryTimeout）  | 🔒默认                     | 事务中的查询超时时间（秒）                          |
+| `maxWaitThreadCount`      | int | -1（不限）             | 🔒默认                     | 最大等待获取连接的线程数                           |
 
+
+## 关于networkTimeout 与 socketTimeout
+socketTimeout是socket读操作的等待时间限制，通常指“等待mysql返回包”
+```
+发送 SQL  
+↓  
+阻塞在 socket.read() 等服务端返回第一个包
+```
 
 JDBC MySQL connector 源码：https://raw.githubusercontent.com/mysql/mysql-connector-j/release/9.x/src/main/user-impl/java/com/mysql/cj/jdbc/ConnectionImpl.java
 注意 **jdbc 层的 `setNetworkTimeout` 就是 mysql 底层的`setSocketTimeout`**
@@ -298,11 +304,11 @@ JDBC MySQL connector 源码：https://raw.githubusercontent.com/mysql/mysql-conn
 
 ## 七、废弃连接处理配置（3 项）
 
-|配置项|类型|默认值|说明|
-|---|---|---|---|
-|`removeAbandoned`|boolean|false|是否自动回收废弃连接|
-|`removeAbandonedTimeoutMillis`|long|300000（5分钟）|连接被认定为废弃的超时时间（毫秒）|
-|`logAbandoned`|boolean|false|是否记录废弃连接的堆栈信息|
+| 配置项                            | 类型      | 默认值         | 说明                |
+| ------------------------------ | ------- | ----------- | ----------------- |
+| `removeAbandoned`              | boolean | false       | 是否自动回收废弃连接        |
+| `removeAbandonedTimeoutMillis` | long    | 300000（5分钟） | 连接被认定为废弃的超时时间（毫秒） |
+| `logAbandoned`                 | boolean | false       | 是否记录废弃连接的堆栈信息     |
 ![[Pasted image 20260423155411.png|278]]
 ---
 
