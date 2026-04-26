@@ -41,14 +41,14 @@
 
 ## 三、连接池大小控制
 
-| 参数              | 默认值        | 选择      | 说明                                |                     |
-| --------------- | ---------- | ------- | --------------------------------- | ------------------- |
-| `initialSize`   | `0`        | 🔄待定    | 池启动时预创建的连接数                       |                     |
-| `maxTotal`      | `8`        | 🔄待定    | 池中最大活跃连接数，负数表示无限制                 |                     |
-| `maxIdle`       | `8`        | 🔄待定    | 池中最大空闲连接数，负数表示无限制                 |                     |
-| `minIdle`       | `0`        | 🔄待定    | 池中最小空闲连接数，0 表示不保留                 |                     |
-| `maxWaitMillis` | `-1`（无限等待） | ✅保持2000 | 无可用连接时最长等待毫秒数，-1 表示无限等待，超时抛异常     |                     |
-| `lifo`          | `true`     | 🔒默认    | true=LIFO（最近使用优先），false=FIFO 队列顺序 | [7](#0-6) [8](#0-7) |
+| 参数              | 默认值        | 选择                       | 说明                                |                     |
+| --------------- | ---------- | ------------------------ | --------------------------------- | ------------------- |
+| `initialSize`   | `0`        | 🔄待定                     | 池启动时预创建的连接数                       |                     |
+| `maxTotal`      | `8`        | 🔄待定                     | 池中最大活跃连接数，负数表示无限制                 |                     |
+| `maxIdle`       | `8`        | 🔄待定⚠️druid没有，考虑设置为最大连接数 | 池中最大空闲连接数，负数表示无限制                 |                     |
+| `minIdle`       | `0`        | 🔄待定                     | 池中最小空闲连接数，0 表示不保留                 |                     |
+| `maxWaitMillis` | `-1`（无限等待） | ✅保持2000                  | 无可用连接时最长等待毫秒数，-1 表示无限等待，超时抛异常     |                     |
+| `lifo`          | `true`     | 🔒默认                     | true=LIFO（最近使用优先），false=FIFO 队列顺序 | [7](#0-6) [8](#0-7) |
 - **初始化过程**：
 	- 懒初始化：第一次`BasicDataSource.getConnection()`懒初始化进入 createDataSource()
 	- 连接池初始构建：工厂先设置`poolPreparedStatements`和`maxOpenPreparedStatement`这两个参数，然后调用`createPoolableConnecitonFactory`，把其他参数一并set入。
@@ -93,23 +93,28 @@
 - DBCP对于连接验证的行为没有其他联动参数，除了其中`testWhileIdle`关联下面第五章的定时任务
 	- 【同步校验频次高】也就是说，`testOnCreate`、`testOnBorrow`和`testOnReturn`，对**所有连接**的**每一次**创建、借出借回都会执行。没有间隔时间。
 	- 【异步校验】`testWhileIdle`控制异步保活定时任务
-	- 
+
 
 ---
 
 ## 五、定时任务空闲连接驱逐（Eviction）
 
-| 参数                               | 默认值             | 说明                                                                   |                         |
-| -------------------------------- | --------------- | -------------------------------------------------------------------- | ----------------------- |
-| `timeBetweenEvictionRunsMillis`  | `-1`（不运行）       | 空闲驱逐线程运行间隔毫秒数，非正值则不启动驱逐线程                                            |                         |
-| `numTestsPerEvictionRun`         | `3`             | 每次驱逐线程运行时检查的连接数                                                      |                         |
-| `minEvictableIdleTimeMillis`     | `1800000`（30分钟） | 连接在池中空闲超过此时长（毫秒）才有资格被驱逐                                              |                         |
-| `softMinEvictableIdleTimeMillis` | `-1`            | 类似上项，但额外要求池中空闲连接数超过 `minIdle` 才驱逐；`minEvictableIdleTimeMillis` 优先级更高 |                         |
-| `evictionPolicyClassName`        | 默认策略            | 自定义驱逐策略的完整类名，需实现 `EvictionPolicy` 接口                                 |                         |
-|                                  |                 |                                                                      |                         |
-| `logExpiredConnections`          | `true`          | 是否记录因超过 `maxConnLifetimeMillis` 而被关闭的连接日志                            | [11](#0-10) [12](#0-11) |
-|                                  |                 |                                                                      |                         |
-- Eviction驱逐机制（注意只驱逐idle连接）：
+| 参数                               | 默认值             | 选择  | 说明                                                                   |                         |
+| -------------------------------- | --------------- | --- | -------------------------------------------------------------------- | ----------------------- |
+| `timeBetweenEvictionRunsMillis`  | `-1`（不运行）       |     | 空闲驱逐线程运行间隔毫秒数，非正值则不启动驱逐线程                                            |                         |
+| `numTestsPerEvictionRun`         | `3`             |     | 每次驱逐线程运行时检查的连接数                                                      |                         |
+| `minEvictableIdleTimeMillis`     | `1800000`（30分钟） |     | 连接在池中空闲超过此时长（毫秒）才有资格被驱逐                                              |                         |
+| `softMinEvictableIdleTimeMillis` | `-1`            |     | 类似上项，但额外要求池中空闲连接数超过 `minIdle` 才驱逐；`minEvictableIdleTimeMillis` 优先级更高 |                         |
+| `evictionPolicyClassName`        | 默认策略            |     | 自定义驱逐策略的完整类名，需实现 `EvictionPolicy` 接口                                 |                         |
+|                                  |                 |     |                                                                      |                         |
+| `logExpiredConnections`          | `true`          |     | 是否记录因超过 `maxConnLifetimeMillis` 而被关闭的连接日志                            | [11](#0-10) [12](#0-11) |
+|                                  |                 |     |                                                                      |                         |
+- Eviction控制空闲连接数（创建或驱逐idle连接）
+	- 和前面章节的 maxIdle 和 minIdle 有关
+	- 注意 maxIdle 在druid里没有
+		- minIdle < maxIdle < maxTotal
+		- 在这个语境下，maxTotal 反而像一个**超卖上限**，流量下去的时候会降低到maxIdle。
+- Eviction驱逐机制：
 	- 开关：`timeBetweenEvictionRunsMillis`这个是核心开关，需要大于0，才启动，否则无任何行为。另一个开关是`testWhileIdle`.
 	- 开关打开后：会启动一个`后台线程（Evictor）`，周期性地扫描`idle`连接。（注意只驱逐idle连接）。
 	- 运行期间：有一个关键的**批量参数**，是一个`numTestsPerEvictionRun`，这是一种**渐进式扫描**，而不是全量的。
