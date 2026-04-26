@@ -110,7 +110,7 @@
 	- `timeBetweenEvictionRunsMillis`这个是核心开关，需要大于0，才启动，否则无任何行为。
 	- 会启动一个`后台线程（Evictor）`，周期性地扫描`idle`连接。（注意只驱逐idle连接）。
 	- 测试参数为`testWhileIdle`
-	- 关键的**批量参数**，是一个`numTestsPerEvictionRun`，是一种**渐进式扫描**，而不是全量的。
+	- 关键的**批量参数**，是一个`numTestsPerEvictionRun`，这是一种**渐进式扫描**，而不是全量的。
 	- 【关键】连接最大存活时间`maxConnLifetimeMillis`，默认是无限，不适合直接使用。
 ---
 
