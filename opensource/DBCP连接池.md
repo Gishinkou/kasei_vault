@@ -144,7 +144,8 @@
 | `maxOpenPreparedStatements`  | 无限制     | Statement 池中最大同时开放的 Statement 数，负数表示无限制           |                         |
 | `clearStatementPoolOnReturn` | `false` | 连接归还时是否清空其 Statement 池                            | [15](#0-14) [16](#0-15) |
 |                              |         |                                                   |                         |
-
+- 这里对`PreparedStatement`做的**池化**到底解决什么问题？
+	- 
 ---
 
 ## 八、连接初始化
