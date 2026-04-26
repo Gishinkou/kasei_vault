@@ -65,7 +65,7 @@
 		- `autoCommitOnReturn`不是配置而是一个状态记录。
 		- `rollbackOnReturn`为true时，会回滚未提交事务。因为此时理论上，上层业务调用已经调了close，丢失了对这个连接的引用。这个连接务必要回收掉。
 		- `cacheState`的作用是把`autoCommit/readOnly`的状态记录在本地，而不用和数据库进行网络IO。
-	- 一个待验证的观点：即使不开启归还时忘记提交的事务的rollback，也可能在连接下次`setAutoCommit`时，触发隐式的事务提交（MySQL是这样的）
+	- 【一个待验证的观点】：即使不开启归还时忘记提交的事务的rollback，也可能在连接下次`setAutoCommit`时，触发隐式的事务提交（MySQL是这样的）
 - 归还连接时的空闲治理问题。
 	- 归还时首先做`testOnReturn`检验，检验失败后会触发`ensureIdle(1,false)`来对最小空闲连接数进行确保。
 		- 注意这里有一个`maxIdle`的概念，如果归还的连接数超过了`maxIdle`，会触发销毁而不是回到idle deque。
@@ -172,6 +172,8 @@
 | `fastFailValidation`          | `false` | 对已抛出"致命" SQLException 的连接，验证立即失败，不再调用 `isValid` 或执行验证 SQL                 |                         |
 | `disconnectionSqlCodes`       | `null`  | 逗号分隔的 SQL State 码列表，视为致命断连错误（需 `fastFailValidation=true`）                 |                         |
 | `disconnectionIgnoreSqlCodes` | `null`  | 逗号分隔的 SQL State 码列表，即使匹配致命条件也忽略（需 `fastFailValidation=true`，since 2.13.0） | [19](#0-18) [20](#0-19) |
+- `fastfail`机制
+	- **如何在“连接已经坏掉”的情况下，避免再做一次无意义的验证**
 
 ---
 
