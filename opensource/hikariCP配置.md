@@ -51,16 +51,16 @@
 
 ## 五、连接行为
 
-| 配置项                      | 类型      | 默认值            | 选择     | 运行时可变             | 说明                                                          |                      |
-| ------------------------ | ------- | -------------- | ------ | ----------------- | ----------------------------------------------------------- | -------------------- |
-| `autoCommit`             | boolean | true           | ✅保持开启  | 否                 | 连接的默认自动提交行为                                                 |                      |
-| `readOnly`               | boolean | false          | 🔄是否需要 | 否                 | 连接是否以只读模式返回                                                 |                      |
-| `transactionIsolation`   | String  | driver default | 🔒默认   | 否                 | 默认事务隔离级别，取 `Connection` 类常量名，如 `TRANSACTION_READ_COMMITTED` |                      |
-| `catalog`                | String  | driver default | 🔒默认   | **是**（建议仅在池挂起后修改） | 连接的默认 catalog                                               |                      |
-| `schema`                 | String  | driver default | 🔒默认   | 否                 | 连接的默认 schema                                                |                      |
-| `connectionInitSql`      | String  | none           | 🔒默认【】 | 否                 | 每个新连接创建后、加入池前执行的 SQL；执行失败视为连接失败                             |                      |
-| `connectionTestQuery`    | String  | none           |        | 否                 | 连接存活验证 SQL（仅供不支持 JDBC4 `isValid()` 的旧驱动使用）                  |                      |
-| `isolateInternalQueries` | boolean | false          |        | 否                 | 是否将内部查询（如存活检测）包裹在独立事务中（仅 `autoCommit=false` 时有效）            | [9](#0-8) [10](#0-9) |
+| 配置项                      | 类型      | 默认值            | 选择                      | 运行时可变             | 说明                                                          |                      |
+| ------------------------ | ------- | -------------- | ----------------------- | ----------------- | ----------------------------------------------------------- | -------------------- |
+| `autoCommit`             | boolean | true           | ✅保持开启                   | 否                 | 连接的默认自动提交行为                                                 |                      |
+| `readOnly`               | boolean | false          | 🔄是否需要                  | 否                 | 连接是否以只读模式返回                                                 |                      |
+| `transactionIsolation`   | String  | driver default | 🔒默认                    | 否                 | 默认事务隔离级别，取 `Connection` 类常量名，如 `TRANSACTION_READ_COMMITTED` |                      |
+| `catalog`                | String  | driver default | 🔒默认                    | **是**（建议仅在池挂起后修改） | 连接的默认 catalog                                               |                      |
+| `schema`                 | String  | driver default | 🔒默认                    | 否                 | 连接的默认 schema                                                |                      |
+| `connectionInitSql`      | String  | none           | 🔒默认【不只是用来检测，还用来调SET语句】 | 否                 | 每个新连接创建后、加入池前执行的 SQL；执行失败视为连接失败                             |                      |
+| `connectionTestQuery`    | String  | none           | 可替换SELECT 1             | 否                 | 连接存活验证 SQL（仅供不支持 JDBC4 `isValid()` 的旧驱动使用）                  |                      |
+| `isolateInternalQueries` | boolean | false          | 🔒默认                    | 否                 | 是否将内部查询（如存活检测）包裹在独立事务中（仅 `autoCommit=false` 时有效）            | [9](#0-8) [10](#0-9) |
 
 ---
 
@@ -77,10 +77,10 @@
 
 ## 七、JMX 管理
 
-| 配置项 | 类型 | 默认值 | 说明 |
-|---|---|---|---|
-| `registerMbeans` | boolean | false | 是否向 JMX 注册 `HikariConfigMXBean` 和 `HikariPoolMXBean` |
-| `allowPoolSuspension` | boolean | false | 是否允许通过 JMX 挂起/恢复连接池（有性能开销，仅用于故障转移场景） | [13](#0-12) 
+| 配置项                   | 类型      | 默认值   | 说明                                                   |             |
+| --------------------- | ------- | ----- | ---------------------------------------------------- | ----------- |
+| `registerMbeans`      | boolean | false | 是否向 JMX 注册 `HikariConfigMXBean` 和 `HikariPoolMXBean` |             |
+| `allowPoolSuspension` | boolean | false | 是否允许通过 JMX 挂起/恢复连接池（有性能开销，仅用于故障转移场景）                 | [13](#0-12) |
 
 ---
 
