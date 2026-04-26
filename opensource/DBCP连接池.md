@@ -108,18 +108,23 @@
 	- 会启动一个`后台线程（Evictor）`，周期性地扫描`idle`连接。（注意只驱逐idle连接）。
 	- 测试参数为`testWhileIdle`
 	- 关键的**批量参数**，是一个`numTestsPerEvictionRun`，是一种**渐进式扫描**，而不是全量的。
+	- 【关键】连接最大存活时间`maxConnLifetimeMillis`，默认是无限，不适合直接使用。
 ---
 
 ## 六、废弃连接处理（Abandoned Connection）
 
-| 参数 | 默认值 | 说明 |
-|------|--------|------|
-| `removeAbandonedOnBorrow` | `false` | 借用连接时若满足条件（活跃数 > maxTotal-3 且空闲数 < 2）则清理废弃连接 |
-| `removeAbandonedOnMaintenance` | `false` | 驱逐线程运行结束后清理废弃连接（需 `timeBetweenEvictionRunsMillis` > 0） |
-| `removeAbandonedTimeout` | `300`（秒） | 连接超过此秒数未使用则视为废弃（执行 Statement 会重置计时） |
-| `logAbandoned` | `false` | 是否记录废弃连接/Statement 的堆栈信息（有性能开销） |
-| `abandonedUsageTracking` | `false` | 是否记录每次方法调用的堆栈以辅助调试废弃连接（开销显著） | [13](#0-12) [14](#0-13) 
+| 参数                             | 默认值      | 说明                                                     |                         |
+| ------------------------------ | -------- | ------------------------------------------------------ | ----------------------- |
+| `removeAbandonedOnBorrow`      | `false`  | 借用连接时若满足条件（活跃数 > maxTotal-3 且空闲数 < 2）则清理废弃连接           |                         |
+| `removeAbandonedOnMaintenance` | `false`  | 驱逐线程运行结束后清理废弃连接（需 `timeBetweenEvictionRunsMillis` > 0） |                         |
+| `removeAbandonedTimeout`       | `300`（秒） | 连接超过此秒数未使用则视为废弃（执行 Statement 会重置计时）                    |                         |
+| `logAbandoned`                 | `false`  | 是否记录废弃连接/Statement 的堆栈信息（有性能开销）                        |                         |
+| `abandonedUsageTracking`       | `false`  | 是否记录每次方法调用的堆栈以辅助调试废弃连接（开销显著）                           | [13](#0-12) [14](#0-13) |
 
+- 如何定义废弃连接，废弃连接有什么问题
+	- 废弃连接是**连接已经借出**，但**长时间没有归还**。这主要有连接泄露的风险。
+	- 但听说有些业务会有**超过两个小时**的超长事务，直觉上会被这个东西判定成废弃连接，导致失败？
+	- 
 ---
 
 ## 七、PreparedStatement 池化
