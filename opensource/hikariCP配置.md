@@ -46,7 +46,14 @@
 | `keepaliveTime`             | long (ms) | 120000  | ✅保持300秒 | 否     | 对空闲连接发送保活 ping 的间隔，须小于 `maxLifetime`，0=禁用                    | 30000ms |                     |
 | `leakDetectionThreshold`    | long (ms) | 0       | ✅保持默认关闭 | 是     | 【实质是给每个连接开一个定时打印任务，时间到前结束就不打了】连接借出超过此时长则记录泄漏警告，0=禁用          | 2000ms  |                     |
 | `initializationFailTimeout` | long (s)  | 1       | ✅保持1秒   | 否     | 池初始化时获取首个连接的超时；>0=阻塞等待；0=尝试验证但失败时仍启动；<0=跳过初始化直接启动            | —       | [7](#0-6) [8](#0-7) |
-
+- 借连接过程：
+	- 首先看连接是否被标记驱逐
+	- 看连接距离上次探活是否超过了一个窗口时间
+		- 如果是，则执行探活语句，根据探活语句结果重试
+		- （上次访问已超过内部的 `aliveBypassWindow` 且 `isConnectionDead()` 返回真）
+	- 创建并初始化连接返回
+- 涉及到的配置：
+	- 
 ---
 
 ## 五、连接行为
@@ -65,12 +72,7 @@
 	- 设置 networkTimeout、默认只读/自动提交/隔离级别、catalog/schema
 	- 执行 connectionInitSql，并检查 JDBC4 isValid() 或 connectionTestQuery 支持。
 	- 简化路径是：HikariDataSource ctor -> HikariPool ctor -> checkFailFast -> createPoolEntry -> newConnection -> setupConnection。
-- 借连接过程：
-	- 首先看连接是否被标记驱逐
-	- 看连接距离上次探活是否超过了一个窗口时间
-		- 如果是，则执行探活语句，根据探活语句结果重试
-		- （上次访问已超过内部的 `aliveBypassWindow` 且 `isConnectionDead()` 返回真）
-	- 创建并初始化连接返回
+
 - hikari实现的亮点：
 	- `ConcurrentBag` 的热路径先查 thread-local 条目，再扫共享列表，最后走 `SynchronousQueue` handoff，这就是 Hikari 热路径快的根本原因：**几乎没有“池级统一锁 + 条件队列”这层额外开销。**
 
