@@ -58,8 +58,8 @@
 - 借连接【借用时做很多事，热路径比较重，行为比较显式】：
 	- `maxTotal`，`maxWaitMillis`在最大数量和最大耗时上控制获取连接是否失败。超容量则进入阻塞等待，阻塞等待时间达到上限就放弃报错。
 	- 发生借用校验`testOnBorrow`，接下来会尝试执行`validationQuery`（默认null）和`validationQueryTimeout`（默认无超时）。
-		- 泄露回收`removeAbandonedOnBorrow`默认是false，`removeAbandonedTimeout`是默认是300秒。关于泄露回收，还有两个日志、追踪选项`logAbandoned`和`abandonedUsageTracking`。对中间件而言，DBCP 的 borrow wait 与 abandoned reclaim 其实是两套背压机制，不能同时激进打开
-		- [TODO: fastFailValidation, disconnectionSqlCodes, `disconnectionIgnoreSqlCodes`]`fastFailValidation=true` 只有与 SQLState 分类配置联动时，才会把“已判定断连”的连接在后续验证时直接 fail fast。
+		- 泄露回收`removeAbandonedOnBorrow`默认是false，`removeAbandonedTimeout`是默认是300秒。关于泄露回收，还有两个日志、追踪选项`logAbandoned`和`abandonedUsageTracking`。
+		- 同时做**
 - 归还连接时的事务状态残留问题
 	- `rollbackOnReturn` 默认 true、`autoCommitOnReturn` 默认 true、`cacheState` 默认 true
 		- `autoCommitOnReturn`不是配置而是一个状态记录。
@@ -134,6 +134,7 @@
 			- 使用这些 Statement 执行 query/update，也就是 execute 系列方法
 		- 可能会被误判的场景：
 			- 一个**超长事务同时**涉及Mysql和其他类型的数据存储、消息中间件、文件系统等，**时间花在了其他IO或计算任务**上。数据库statement本身可能不再继续活跃了，可能在等待任务结束，或等待汇总完结果落库。这种情况就可能被**误判为废弃连接**
+- `removeAbandonedOnBorrow=true` 不是无条件回收，它还依赖 `getNumActive() > getMaxTotal()-3` 且 `getNumIdle() < 2` 这两个条件。对中间件而言，DBCP 的 borrow wait 与 abandoned reclaim 其实是两套背压机制，不能同时激进打开
 ---
 
 ## 七、PreparedStatement 池化
