@@ -28,6 +28,14 @@
 | `cacheState`                  | `true`       | 是否缓存 readOnly/autoCommit 状态以减少数据库查询；若直接操作底层连接修改了这些状态，应设为 false                               |                     |
 | `enableAutoCommitOnReturn`    | `true`       | 连接归还时若 autoCommit=false，是否自动重置为 true                                                         |                     |
 | `rollbackOnReturn`            | `true`       | 连接归还时若 autoCommit=false 且非只读，是否自动 rollback                                                   | [5](#0-4) [6](#0-5) |
+以下只发生在 connection 第一次创建完成时：
+
+| 参数                   | 默认值    | 说明                              |                         |
+| -------------------- | ------ | ------------------------------- | ----------------------- |
+| `connectionInitSqls` | `null` | 物理连接首次创建时执行的 SQL 列表（分号分隔），仅执行一次 | [17](#0-16) [18](#0-17) |
+- 注意`connectionInitSqls`不是说开始执行`SELECT 1`，应用场景更多是初始化连接状态
+	- 设置自动提交：`SET autocommit=1`
+	- 设置时区：`SET time_zone= '+08:00'`
 
 ---
 
@@ -83,11 +91,6 @@
 | `testOnReturn`           | `false` | 连接归还到池时是否验证                                                  |                      |
 | `testWhileIdle`          | `false` | 空闲驱逐线程运行时是否验证空闲连接，验证失败则丢弃                                    | [9](#0-8) [10](#0-9) |
 
-以下连接验证只发生在 connection 第一次创建完成时：
-
-| 参数                   | 默认值    | 说明                              |                         |
-| -------------------- | ------ | ------------------------------- | ----------------------- |
-| `connectionInitSqls` | `null` | 物理连接首次创建时执行的 SQL 列表（分号分隔），仅执行一次 | [17](#0-16) [18](#0-17) |
 
 ---
 
