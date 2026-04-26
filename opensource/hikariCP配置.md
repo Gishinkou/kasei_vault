@@ -64,6 +64,14 @@
 - 物理连接的真正初始化逻辑在 PoolBase.newConnection() 与 setupConnection()：
 	- 设置 networkTimeout、默认只读/自动提交/隔离级别、catalog/schema，执行 connectionInitSql，并检查 JDBC4 isValid() 或 connectionTestQuery 支持。
 	- 简化路径是：HikariDataSource ctor -> HikariPool ctor -> checkFailFast -> createPoolEntry -> newConnection -> setupConnection。
+- 借用路径 `HikariDataSource.getConnection() -> HikariPool.getConnection(connectionTimeout) -> ConcurrentBag.borrow(timeout)`，然后在借到 `PoolEntry` 后做两件事：
+	- 若连接已被标记驱逐，或距离上次访问已超过内部的 `aliveBypassWindow` 且 `isConnectionDead()` 返回真，就关闭并重试；否则直接创建代理连接返回。
+	- `ConcurrentBag` 的热路径先查 thread-local 条目，再扫共享列表，最后走 `SynchronousQueue` handoff，这就是 Hikari 热路径快的根本原因：**几乎没有“池级统一锁 + 条件队列”这层额外开销。**
+- 借连接过程：
+	- 首先看连接是否被标记驱逐
+	- 看连接距离上次探活是否超过了一个窗口时间
+		- 如果是，则执行探活语句，根据探活语句结果重试
+	- 
 
 ---
 
