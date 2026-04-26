@@ -61,6 +61,9 @@
 | `connectionInitSql`      | String  | none           | 🔒默认【不只是用来检测，还用来调SET语句】 | 否                 | 每个新连接创建后、加入池前执行的 SQL；执行失败视为连接失败                             |                      |
 | `connectionTestQuery`    | String  | none           | 可替换SELECT 1             | 否                 | 连接存活验证 SQL（仅供不支持 JDBC4 `isValid()` 的旧驱动使用）                  |                      |
 | `isolateInternalQueries` | boolean | false          | 🔒默认                    | 否                 | 是否将内部查询（如存活检测）包裹在独立事务中（仅 `autoCommit=false` 时有效）            | [9](#0-8) [10](#0-9) |
+- 物理连接的真正初始化逻辑在 PoolBase.newConnection() 与 setupConnection()：
+	- 设置 networkTimeout、默认只读/自动提交/隔离级别、catalog/schema，执行 connectionInitSql，并检查 JDBC4 isValid() 或 connectionTestQuery 支持。
+	- 简化路径是：HikariDataSource ctor -> HikariPool ctor -> checkFailFast -> createPoolEntry -> newConnection -> setupConnection。
 
 ---
 
