@@ -258,14 +258,14 @@ PROP_SOCKET_TIMEOUT,
 
 ## 六、超时配置（5 项）
 
-| 配置项                       | 类型  | 默认值               | 说明                |
-| ------------------------- | --- | ----------------- | ----------------- |
-| `connectTimeout`          | int | 0（驱动默认）           | 建立连接的超时时间（毫秒）     |
-| `socketTimeout`           | int | 0（驱动默认）           | Socket 读写超时时间（毫秒） |
-| `queryTimeout`            | int | 0（不限）             | 默认查询超时时间（秒）       |
-| `transactionQueryTimeout` | int | 0（同 queryTimeout） | 事务中的查询超时时间（秒）     |
-| `maxWaitThreadCount`      | int | -1（不限）            | 最大等待获取连接的线程数      |
-|                           |     |                   |                   |
+| 配置项                       | 类型  | 默认值               | 选择  | 说明                |
+| ------------------------- | --- | ----------------- | --- | ----------------- |
+| `connectTimeout`          | int | 0（驱动默认）           |     | 建立连接的超时时间（毫秒）     |
+| `socketTimeout`           | int | 0（驱动默认）           |     | Socket 读写超时时间（毫秒） |
+| `queryTimeout`            | int | 0（不限）             |     | 默认查询超时时间（秒）       |
+| `transactionQueryTimeout` | int | 0（同 queryTimeout） |     | 事务中的查询超时时间（秒）     |
+| `maxWaitThreadCount`      | int | -1（不限）            |     | 最大等待获取连接的线程数      |
+|                           |     |                   |     |                   |
 
 ---
 
