@@ -222,7 +222,7 @@ PROP_SOCKET_TIMEOUT,
 
 | 配置项                             | 类型      | 默认值           |     | 说明                   |
 | ------------------------------- | ------- | ------------- | --- | -------------------- |
-| `timeBetweenEvictionRunsMillis` | long    | 60000（1分钟）    |     | 驱逐线程运行间隔（毫秒）         |
+| `timeBetweenEvictionRunsMillis` | long    | 60000（1分钟）    | ✅保持 | 驱逐线程运行间隔（毫秒）         |
 | `numTestsPerEvictionRun`        | int     | 3             |     | 每次驱逐检测的连接数           |
 | `minEvictableIdleTimeMillis`    | long    | 1800000（30分钟） |     | 连接最小空闲时间，超过才可被驱逐（毫秒） |
 | `maxEvictableIdleTimeMillis`    | long    | 25200000（7小时） |     | 连接最大空闲时间，超过强制驱逐（毫秒）  |
