@@ -47,7 +47,12 @@
 		- 注意其中一个参数影响工厂调用：`registerConnectionMBean`，指MBean监控关键类的注入，不开启则注入null，跳过该逻辑。
 	- 预建连接：`initialSize`一次生效（`connectionPool.addObjects(initialSize)`，调用的是底层的通用对象池里的add方法，也就是add指定数量通用对象的方法
 	- 开启池维护（保活逻辑块）：用来启动池子维护功能，但里面只设置了`setDurationBetweenEvictionRuns`和第五章空闲连接驱逐里的变量产生了关联。
-	- 
+- 借连接【借用时做很多事，热路径比较重，行为比较显式】：
+	- `maxTotal`，`maxWaitMillis`在最大数量和最大耗时上控制获取连接是否失败。超容量则进入阻塞等待，等待时间达到上限就放弃。
+	- 发生借用校验`testOnBorrow`，接下来会尝试执行`validationQuery`（默认null）和`validationQueryTimeout`（默认无超时）。
+		- 泄露回收`removeAbandonedOnBorrow`默认是false，`removeAbandonedTimeout`是默认是300秒。关于泄露回收，还有两个日志、追踪选项`logAbandoned`和`abandonedUsageTracking`。[TODO: 说到底，泄露回收(以abandon作为关键词)]到底做什么。`removeAbandonedOnBorrow=true` 不是无条件回收，它还依赖 `getNumActive() > getMaxTotal()-3` 且 `getNumIdle() < 2` 这两个条件。对中间件而言，DBCP 的 borrow wait 与 abandoned reclaim 其实是两套背压机制，不能同时激进打开
+		- [TODO: fastFailValidation, disconnectionSqlCodes, `disconnectionIgnoreSqlCodes`]`fastFailValidation=true` 只有与 SQLState 分类配置联动时，才会把“已判定断连”的连接在后续验证时直接 fail fast。
+		- 
 ---
 
 ## 四、连接验证
