@@ -39,8 +39,8 @@
 
 | 配置项                         | 类型        | 默认值     | 选择      | 运行时可变 | 说明                                                           | 最小值     |                     |
 | --------------------------- | --------- | ------- | ------- | ----- | ------------------------------------------------------------ | ------- | ------------------- |
-| `connectionTimeout`         | long (ms) | 30000   | ✅保持2000 | 是     | 客户端等待连接的最大时长，超时抛 `SQLException`                              | 250ms   |                     |
-| `validationTimeout`         | long (ms) | 5000    | ✅保持500  | 是     | 验证连接存活的最大时长，须小于 `connectionTimeout`                          | 250ms   |                     |
+| `connectionTimeout`         | long (ms) | 30000   | ✅保持2000 | 是     | 【建连】客户端等待连接的最大时长，超时抛 `SQLException`                          | 250ms   |                     |
+| `validationTimeout`         | long (ms) | 5000    | ✅保持500  | 是     | 【keepalive】验证连接存活的最大时长，须小于 `connectionTimeout`               | 250ms   |                     |
 | `idleTimeout`               | long (ms) | 600000  | ✅保持600秒 | 是     | 空闲连接在池中的最大存活时长（仅 `minimumIdle < maximumPoolSize` 时生效），0=永不移除 | 10000ms |                     |
 | `maxLifetime`               | long (ms) | 1800000 | ✅保持30分钟 | 是     | 连接的最大生命周期，0=无限制；**强烈建议设置，且比数据库/基础设施的连接超时短几秒**                | 30000ms |                     |
 | `keepaliveTime`             | long (ms) | 120000  | ✅保持300秒 | 否     | 对空闲连接发送保活 ping 的间隔，须小于 `maxLifetime`，0=禁用                    | 30000ms |                     |
@@ -67,9 +67,39 @@
 		- 主要根据`idleTimeout`、`minimumIdle`做驱逐操作
 	- `HouseKeeper`机制：**分为即时close()，和驱逐标记，两类**
 		- `idleTimeout`清理：空闲连接，通常立即关闭（`STATE_NOT_IN_USE`）
-		- `softEvict`：使用中的连接，reserve 失败 -> 只标记 evicted
-		- `maxLifeTime`：最大生存时间，也是通过标记 evicted 来执行。
+		- `softEvict`：使用中的连接，reserve 失败 -> 只标记 evicted。（待驱逐统一为`softEvictConnection`）
+			- 产生条件1：`maxLifeTime`，最大生存时间到期，标记 evicted 。
+			- 产生条件2：`pool shutdown`，池关闭，所有连接进入待驱逐状态
+			- keepalive 和该过程无关
+	- 【什么时候执行连接回收：驱逐标记的消费时机】
+		- 【主要：归还连接时】`connection.close()`
+		- 【借出连接时】，如果发现标记evicted，则尝试拿下一个连接
+		- 【reverse】其他任务 reverse 成功时（说到底什么是reverse）
 	- `keepalive`是**连接级的定时任务**，定时任务开始时，连接会临时移出池，ping 一下，可用再放回池；死了则看情况触发补连接
+		- `keepalive`不会碰**正在使用中的连接**，它对**空闲时间比较久的连接**，先**reverse()**，再做**健康检查**
+- 【补充：什么是reverse】：
+	- `reserve = CAS 把 PoolEntry 从 NOT_IN_USE → RESERVED`
+	- hikari的状态机：
+		- STATE_NOT_IN_USE （空闲，可借）
+		- STATE_IN_USE （被业务线程持有）
+		- STATE_RESERVED     （被池内部线程占用，比如 close / keepalive）
+	- reserve 成功和失败的含义：
+		- reserve 成功 = 这个连接是 idle 的，并且我抢到了它
+		- reserve 失败 = 要么在用，要么被别人抢了
+- ```
+	HouseKeeper：
+	  - 定期维护池状态
+	  - idleTimeout 空闲回收
+	  - minimumIdle 补连接
+	  - 时钟漂移检测
+	  - 更新 connectionTimeout / validationTimeout 等配置值
+
+	keepalive task：
+	  - 对单个 idle 连接 reserve
+	  - 执行 isValid() 或 connectionTestQuery
+	  - 成功则 unreserve 放回
+	  - 失败则关闭并补连接
+  ```
 ---
 
 ## 五、连接行为
