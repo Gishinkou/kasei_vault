@@ -144,13 +144,21 @@
 | `maxOpenPreparedStatements`  | 无限制     | Statement 池中最大同时开放的 Statement 数，负数表示无限制           |                         |
 | `clearStatementPoolOnReturn` | `false` | 连接归还时是否清空其 Statement 池                            | [15](#0-14) [16](#0-15) |
 |                              |         |                                                   |                         |
+- PreparedStatement池化的作用范围
+	- 这是一个`connection`层级的缓存池，而不是应用全局的。
+	- 也就是每个连接都会有一个自己的缓存池。连接数为100就是100倍缓存池。
+- PreparedStatement池化的内存占用
+	- 以20个连接，100个连接池规模去估计，就是2000个PS缓存池，假如缓存100个preparedStatement
+		- 以一个preparedStatement 1KB-5KB来计算，大约占用`200MB`到`1GB`
+		- 每连接建议 20~50个 PS缓存数量
 - 这里对`PreparedStatement`做的**池化**到底解决什么问题？
 	- `PreparedStatement`本身就有缓存的设计意图，一个statement预编译后只需替换参数，少走很多流程
 	- 但其问题在于，它不能**跨调用复用**，通常只是一个业务方法里的多个参数之间生效。
 	- 将其池化，可以在多次调用之间复用，减少编译成本。
 	- 需要区分：`preparedStatement`的缓存是**发生在client侧**还是**server侧**。
 		- `JDBC connector`实现中，默认是关闭服务侧缓存的（`useServerPrepStmts`=false)
-		- 也就是说，不考虑池化时，preparedStatement 本身的作用，
+		- 也就是说，不考虑池化时，preparedStatement 本身的作用，主要是JVM逻辑成本，这包括拼SQL，替换参数，设置执行前的一些上下文信息等。
+		- 池化后则是进一步跨调用优化这层成本。
 ---
 
 ## 八、连接初始化
