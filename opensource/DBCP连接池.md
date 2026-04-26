@@ -94,16 +94,16 @@
 
 ## 五、定时任务空闲连接驱逐（Eviction）
 
-| 参数                               | 默认值             | 选择       | 说明                                                                               |                         |
-| -------------------------------- | --------------- | -------- | -------------------------------------------------------------------------------- | ----------------------- |
-| `timeBetweenEvictionRunsMillis`  | `-1`（不运行）       | 🔄目前60秒  | 空闲驱逐线程运行间隔毫秒数，非正值则不启动驱逐线程                                                        |                         |
-| `numTestsPerEvictionRun`         | `3`             | 🔄目前3，偏小 | 每次驱逐线程运行时检查的连接数                                                                  |                         |
-| `minEvictableIdleTimeMillis`     | `1800000`（30分钟） | 🔄目前5分钟  | 【保活时间】连接在池中空闲超过此时长（毫秒）才有资格被驱逐                                                    |                         |
-| `softMinEvictableIdleTimeMillis` | `-1`            |          | 【软保活时间，通常更短】类似上项，但额外要求池中空闲连接数超过 `minIdle` 才驱逐；`minEvictableIdleTimeMillis` 优先级更高 |                         |
-| `evictionPolicyClassName`        | 默认策略            | 🔒默认     | 自定义驱逐策略的完整类名，需实现 `EvictionPolicy` 接口                                             |                         |
-|                                  |                 |          |                                                                                  |                         |
-| `logExpiredConnections`          | `true`          | 🔒默认     | 是否记录因超过 `maxConnLifetimeMillis` 而被关闭的连接日志                                        | [11](#0-10) [12](#0-11) |
-|                                  |                 |          |                                                                                  |                         |
+| 参数                               | 默认值             | 选择       | 说明                                                                                               |                         |
+| -------------------------------- | --------------- | -------- | ------------------------------------------------------------------------------------------------ | ----------------------- |
+| `timeBetweenEvictionRunsMillis`  | `-1`（不运行）       | 🔄目前60秒  | 空闲驱逐线程运行间隔毫秒数，非正值则不启动驱逐线程                                                                        |                         |
+| `numTestsPerEvictionRun`         | `3`             | 🔄目前3，偏小 | 每次驱逐线程运行时检查的连接数                                                                                  |                         |
+| `minEvictableIdleTimeMillis`     | `1800000`（30分钟） | 🔄目前5分钟  | 【可以理解为核心连接保活时间】【保活时间】连接在池中空闲超过此时长（毫秒）才有资格被驱逐                                                     |                         |
+| `softMinEvictableIdleTimeMillis` | `-1`            | 🔄可以设置   | 【可以理解为非核心连接保活时间】【软保活时间，通常更短】类似上项，但额外要求池中空闲连接数超过 `minIdle` 才驱逐；`minEvictableIdleTimeMillis` 优先级更高 |                         |
+| `evictionPolicyClassName`        | 默认策略            | 🔒默认     | 自定义驱逐策略的完整类名，需实现 `EvictionPolicy` 接口                                                             |                         |
+|                                  |                 |          |                                                                                                  |                         |
+| `logExpiredConnections`          | `true`          | 🔒默认     | 是否记录因超过 `maxConnLifetimeMillis` 而被关闭的连接日志                                                        | [11](#0-10) [12](#0-11) |
+|                                  |                 |          |                                                                                                  |                         |
 - Eviction控制空闲连接数（创建或驱逐idle连接）
 	- 和前面章节的 maxIdle 和 minIdle 有关
 	- 注意 maxIdle 在druid里没有
