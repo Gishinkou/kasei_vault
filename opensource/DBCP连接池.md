@@ -61,7 +61,7 @@
 - 归还连接时的空闲治理问题。
 	- 归还时首先做`testOnReturn`检验，检验失败后会触发`ensureIdle(1,false)`来对最小空闲连接数进行确保。
 		- 注意这里有一个`maxIdle`的概念，如果归还的连接数超过了`maxIdle`，会触发销毁而不是回到idle deque。
-		- 
+		- 注意这里的`ensureIdle`的第一个参数是最小连接数预期，也就是说，`testOnReturn`只确保至少一个空闲连接存在。 
 ---
 
 ## 四、连接验证
