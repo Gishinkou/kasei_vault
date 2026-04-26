@@ -258,15 +258,42 @@ PROP_SOCKET_TIMEOUT,
 
 ## 六、超时配置（5 项）
 
-| 配置项                       | 类型  | 默认值               | 选择  | 说明                |
-| ------------------------- | --- | ----------------- | --- | ----------------- |
-| `connectTimeout`          | int | 0（驱动默认）           |     | 建立连接的超时时间（毫秒）     |
-| `socketTimeout`           | int | 0（驱动默认）           |     | Socket 读写超时时间（毫秒） |
-| `queryTimeout`            | int | 0（不限）             |     | 默认查询超时时间（秒）       |
-| `transactionQueryTimeout` | int | 0（同 queryTimeout） |     | 事务中的查询超时时间（秒）     |
-| `maxWaitThreadCount`      | int | -1（不限）            |     | 最大等待获取连接的线程数      |
-|                           |     |                   |     |                   |
+| 配置项                       | 类型  | 默认值               | 选择  | 说明                   |
+| ------------------------- | --- | ----------------- | --- | -------------------- |
+| `connectTimeout`          | int | 0（驱动默认）           |     | 建立连接的超时时间（毫秒）        |
+| `socketTimeout`           | int | 0（驱动默认）           |     | Socket 读写超时时间（毫秒）    |
+| `queryTimeout`            | int | 0（不限）             |     | 【SQL执行时间】默认查询超时时间（秒） |
+| `transactionQueryTimeout` | int | 0（同 queryTimeout） |     | 事务中的查询超时时间（秒）        |
+| `maxWaitThreadCount`      | int | -1（不限）            |     | 最大等待获取连接的线程数         |
+|                           |     |                   |     |                      |
+|                           |     |                   |     |                      |
 
+
+JDBC MySQL connector 源码：https://raw.githubusercontent.com/mysql/mysql-connector-j/release/9.x/src/main/user-impl/java/com/mysql/cj/jdbc/ConnectionImpl.java
+注意 **jdbc 层的 `setNetworkTimeout` 就是 mysql 底层的`setSocketTimeout`**
+```
+    @Override
+    public void setNetworkTimeout(Executor executor /* not used */, int milliseconds) throws SQLException {
+        SecurityManager sec = System.getSecurityManager();
+        if (sec != null) {
+            sec.checkPermission(SET_NETWORK_TIMEOUT_PERM);
+        }
+
+        if (milliseconds < 0) {
+            throw SQLError.createSQLException(Messages.getString("Connection.27"), MysqlErrorNumbers.SQLSTATE_CONNJ_ILLEGAL_ARGUMENT,
+                    getExceptionInterceptor());
+        }
+
+        Lock connectionLock = getConnectionLock();
+        connectionLock.lock();
+        try {
+            checkClosed();
+            getSession().setSocketTimeout(milliseconds);
+        } finally {
+            connectionLock.unlock();
+        }
+    }
+```
 ---
 
 ## 七、废弃连接处理配置（3 项）
