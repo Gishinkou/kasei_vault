@@ -52,7 +52,8 @@
 	- 发生借用校验`testOnBorrow`，接下来会尝试执行`validationQuery`（默认null）和`validationQueryTimeout`（默认无超时）。
 		- 泄露回收`removeAbandonedOnBorrow`默认是false，`removeAbandonedTimeout`是默认是300秒。关于泄露回收，还有两个日志、追踪选项`logAbandoned`和`abandonedUsageTracking`。[TODO: 说到底，泄露回收(以abandon作为关键词)]到底做什么。`removeAbandonedOnBorrow=true` 不是无条件回收，它还依赖 `getNumActive() > getMaxTotal()-3` 且 `getNumIdle() < 2` 这两个条件。对中间件而言，DBCP 的 borrow wait 与 abandoned reclaim 其实是两套背压机制，不能同时激进打开
 		- [TODO: fastFailValidation, disconnectionSqlCodes, `disconnectionIgnoreSqlCodes`]`fastFailValidation=true` 只有与 SQLState 分类配置联动时，才会把“已判定断连”的连接在后续验证时直接 fail fast。
-		- 
+- 归还连接状态保留
+	- `rollbackOnReturn` 默认 true、`autoCommitOnReturn` 默认 true、`cacheState` 默认 true
 ---
 
 ## 四、连接验证
