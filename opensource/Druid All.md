@@ -309,6 +309,14 @@ JDBC MySQL connector 源码：https://raw.githubusercontent.com/mysql/mysql-conn
 | `removeAbandoned`              | boolean | false       | 是否自动回收废弃连接        |
 | `removeAbandonedTimeoutMillis` | long    | 300000（5分钟） | 连接被认定为废弃的超时时间（毫秒） |
 | `logAbandoned`                 | boolean | false       | 是否记录废弃连接的堆栈信息     |
+|                                |         |             |                   |
+|                                |         |             |                   |
+- 定义：什么是**废弃连接**
+	- “借走连接但迟迟不归还”，连接池帮你**强制回收（close）**。
+	- 主要考虑连接的上次使用时间：`当前时间 - lastActiveTime > timeout`
+- 调用时机：
+	- `eviction定时任务`
+	- `borrow`时同步触发
 ![[Pasted image 20260423155411.png|278]]
 ---
 
