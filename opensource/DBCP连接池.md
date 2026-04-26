@@ -52,11 +52,16 @@
 	- 发生借用校验`testOnBorrow`，接下来会尝试执行`validationQuery`（默认null）和`validationQueryTimeout`（默认无超时）。
 		- 泄露回收`removeAbandonedOnBorrow`默认是false，`removeAbandonedTimeout`是默认是300秒。关于泄露回收，还有两个日志、追踪选项`logAbandoned`和`abandonedUsageTracking`。[TODO: 说到底，泄露回收(以abandon作为关键词)]到底做什么。`removeAbandonedOnBorrow=true` 不是无条件回收，它还依赖 `getNumActive() > getMaxTotal()-3` 且 `getNumIdle() < 2` 这两个条件。对中间件而言，DBCP 的 borrow wait 与 abandoned reclaim 其实是两套背压机制，不能同时激进打开
 		- [TODO: fastFailValidation, disconnectionSqlCodes, `disconnectionIgnoreSqlCodes`]`fastFailValidation=true` 只有与 SQLState 分类配置联动时，才会把“已判定断连”的连接在后续验证时直接 fail fast。
-- 归还连接状态保留
+- 归还连接时的事务状态残留问题
 	- `rollbackOnReturn` 默认 true、`autoCommitOnReturn` 默认 true、`cacheState` 默认 true
 		- `autoCommitOnReturn`不是配置而是一个状态记录。
 		- `rollbackOnReturn`为true时，会回滚未提交事务。因为此时理论上，上层业务调用已经调了close，丢失了对这个连接的引用。这个连接务必要回收掉。
 		- `cacheState`的作用是把`autoCommit/readOnly`的状态记录在本地，而不用和数据库进行网络IO。
+	- 一个待验证的观点：即使不开启归还时忘记提交的事务的rollback，也可能在连接下次`setAutoCommit`时，触发隐式的事务提交（MySQL是这样的）
+- 归还连接时的空闲治理问题。
+	- 归还时首先做`testOnReturn`检验，检验失败后会触发`ensureIdle(1,false)`来对最小空闲连接数进行确保。
+		- 注意这里有一个`maxIdle`的概念，如果归还的连接数超过了`maxIdle`，会触发销毁而不是回到idle deque。
+		- 
 ---
 
 ## 四、连接验证
