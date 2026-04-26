@@ -230,7 +230,8 @@ PROP_SOCKET_TIMEOUT,
 | `keepAliveBetweenTimeMillis`    | long    | 120000（2分钟）   |     | 保活检测间隔（毫秒）           |
 | `phyTimeoutMillis`              | long    | -1（不限）        |     | 物理连接的最大存活时间（毫秒）      |
 | `phyMaxUseCount`                | long    | -1（不限）        |     | 物理连接最大使用次数           |
-
+- DestroyTask定时维护空闲线程状态
+	- 
 ---
 
 ## 六、超时配置（5 项）
