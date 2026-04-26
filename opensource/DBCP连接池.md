@@ -145,7 +145,12 @@
 | `clearStatementPoolOnReturn` | `false` | 连接归还时是否清空其 Statement 池                            | [15](#0-14) [16](#0-15) |
 |                              |         |                                                   |                         |
 - 这里对`PreparedStatement`做的**池化**到底解决什么问题？
-	- 
+	- `PreparedStatement`本身就有缓存的设计意图，一个statement预编译后只需替换参数，少走很多流程
+	- 但其问题在于，它不能**跨调用复用**，通常只是一个业务方法里的多个参数之间生效。
+	- 将其池化，可以在多次调用之间复用，减少编译成本。
+	- 需要区分：`preparedStatement`的缓存是**发生在client侧**还是**server侧**。
+		- `JDBC connector`实现中，默认是关闭服务侧缓存的（`useServerPrepStmts`=false)
+		- 
 ---
 
 ## 八、连接初始化
