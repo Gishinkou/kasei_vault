@@ -81,15 +81,18 @@
 
 ## 四、连接验证
 
-| 参数                       | 默认值     | 选择                                                | 说明                                                           |                      |
-| ------------------------ | ------- | ------------------------------------------------- | ------------------------------------------------------------ | -------------------- |
-| `validationQuery`        | —       | ✅保持SELECT 1                                       | 验证连接有效性的 SQL（必须是返回至少一行的 SELECT），未设置则用 `Connection.isValid()` |                      |
-| `validationQueryTimeout` | 无超时     | 🔄是否限制探活时间1000ms?<br>（但是更长会被socketTimeout kill 掉） | 验证查询的超时秒数，正值才生效                                              |                      |
-| `testOnCreate`           | `false` | 🔄是否启用                                            | 连接创建后是否立即验证，验证失败则借用操作失败                                      |                      |
-| `testOnBorrow`           | `true`  | ✅保持开启                                             | 从池中借用连接前是否验证，验证失败则丢弃并重试                                      |                      |
-| `testOnReturn`           | `false` | 🔄是否启用                                            | 连接归还到池时是否验证                                                  |                      |
-| `testWhileIdle`          | `false` | ⚠️应当开启                                            | 空闲驱逐线程运行时是否验证空闲连接，验证失败则丢弃                                    | [9](#0-8) [10](#0-9) |
+| 参数                       | 默认值      | 选择                                                | 说明                                                           |                      |
+| ------------------------ | -------- | ------------------------------------------------- | ------------------------------------------------------------ | -------------------- |
+| `validationQuery`        | —        | ✅保持SELECT 1                                       | 验证连接有效性的 SQL（必须是返回至少一行的 SELECT），未设置则用 `Connection.isValid()` |                      |
+| `validationQueryTimeout` | 无超时      | 🔄是否限制探活时间1000ms?<br>（但是更长会被socketTimeout kill 掉） | 验证查询的超时秒数，正值才生效                                              |                      |
+| `maxConnLifetimeMillis`  | `-1`（无限） | 🔄是否设置连接最大存活时间                                    | 连接最大存活时长（毫秒），超过后在下次激活/钝化/验证时关闭，≤0 表示无限                       |                      |
+| `testOnCreate`           | `false`  | 🔄是否启用                                            | 连接创建后是否立即验证，验证失败则借用操作失败                                      |                      |
+| `testOnBorrow`           | `true`   | ✅保持开启                                             | 从池中借用连接前是否验证，验证失败则丢弃并重试                                      |                      |
+| `testOnReturn`           | `false`  | 🔄是否启用                                            | 连接归还到池时是否验证                                                  |                      |
+| `testWhileIdle`          | `false`  | ⚠️应当开启                                            | 空闲驱逐线程运行时是否验证空闲连接，验证失败则丢弃                                    | [9](#0-8) [10](#0-9) |
 - DBCP对于连接验证的行为没有其他联动参数，除了其中`testWhileIdle`关联下面第五章的定时任务
+	- 【同步校验频次高】也就是说，`testOnCreate`、`testOnBorrow`和`testOnReturn`，对**所有连接**的**每一次**创建、借出借回都会执行。没有间隔时间。
+	- 【异步校验】`testWhileIdle`控制异步保活定时任务
 	- 
 
 ---
@@ -103,7 +106,7 @@
 | `minEvictableIdleTimeMillis`     | `1800000`（30分钟） | 连接在池中空闲超过此时长（毫秒）才有资格被驱逐                                              |                         |
 | `softMinEvictableIdleTimeMillis` | `-1`            | 类似上项，但额外要求池中空闲连接数超过 `minIdle` 才驱逐；`minEvictableIdleTimeMillis` 优先级更高 |                         |
 | `evictionPolicyClassName`        | 默认策略            | 自定义驱逐策略的完整类名，需实现 `EvictionPolicy` 接口                                 |                         |
-| `maxConnLifetimeMillis`          | `-1`（无限）        | 连接最大存活时长（毫秒），超过后在下次激活/钝化/验证时关闭，≤0 表示无限                               |                         |
+|                                  |                 |                                                                      |                         |
 | `logExpiredConnections`          | `true`          | 是否记录因超过 `maxConnLifetimeMillis` 而被关闭的连接日志                            | [11](#0-10) [12](#0-11) |
 |                                  |                 |                                                                      |                         |
 - Eviction驱逐机制（注意只驱逐idle连接）：
