@@ -17,17 +17,17 @@
 
 ## 二、连接默认行为
 
-| 参数 | 默认值 | 说明 |
-|------|--------|------|
-| `defaultAutoCommit` | 驱动默认 | 连接的默认 auto-commit 状态，未设置则不调用 `setAutoCommit` |
-| `defaultReadOnly` | 驱动默认 | 连接的默认只读状态，未设置则不调用 `setReadOnly` |
-| `defaultTransactionIsolation` | 驱动默认 | 默认事务隔离级别：`NONE` / `READ_COMMITTED` / `READ_UNCOMMITTED` / `REPEATABLE_READ` / `SERIALIZABLE` |
-| `defaultCatalog` | — | 连接的默认 catalog |
-| `defaultSchema` | — | 连接的默认 schema |
-| `defaultQueryTimeout` | `null`（驱动默认） | Statement 的默认查询超时（秒），null 表示使用驱动默认 |
-| `cacheState` | `true` | 是否缓存 readOnly/autoCommit 状态以减少数据库查询；若直接操作底层连接修改了这些状态，应设为 false |
-| `enableAutoCommitOnReturn` | `true` | 连接归还时若 autoCommit=false，是否自动重置为 true |
-| `rollbackOnReturn` | `true` | 连接归还时若 autoCommit=false 且非只读，是否自动 rollback | [5](#0-4) [6](#0-5) 
+| 参数                            | 默认值          | 说明                                                                                           |                     |
+| ----------------------------- | ------------ | -------------------------------------------------------------------------------------------- | ------------------- |
+| `defaultAutoCommit`           | 驱动默认         | 连接的默认 auto-commit 状态，未设置则不调用 `setAutoCommit`                                                 |                     |
+| `defaultReadOnly`             | 驱动默认         | 连接的默认只读状态，未设置则不调用 `setReadOnly`                                                              |                     |
+| `defaultTransactionIsolation` | 驱动默认         | 默认事务隔离级别：`NONE` / `READ_COMMITTED` / `READ_UNCOMMITTED` / `REPEATABLE_READ` / `SERIALIZABLE` |                     |
+| `defaultCatalog`              | —            | 连接的默认 catalog                                                                                |                     |
+| `defaultSchema`               | —            | 连接的默认 schema                                                                                 |                     |
+| `defaultQueryTimeout`         | `null`（驱动默认） | Statement 的默认查询超时（秒），null 表示使用驱动默认                                                           |                     |
+| `cacheState`                  | `true`       | 是否缓存 readOnly/autoCommit 状态以减少数据库查询；若直接操作底层连接修改了这些状态，应设为 false                               |                     |
+| `enableAutoCommitOnReturn`    | `true`       | 连接归还时若 autoCommit=false，是否自动重置为 true                                                         |                     |
+| `rollbackOnReturn`            | `true`       | 连接归还时若 autoCommit=false 且非只读，是否自动 rollback                                                   | [5](#0-4) [6](#0-5) |
 
 ---
 
@@ -135,11 +135,12 @@
 
 ## 七、PreparedStatement 池化
 
-| 参数 | 默认值 | 说明 |
-|------|--------|------|
-| `poolPreparedStatements` | `false` | 是否启用 PreparedStatement 池化（同时包含 CallableStatement） |
-| `maxOpenPreparedStatements` | 无限制 | Statement 池中最大同时开放的 Statement 数，负数表示无限制 |
-| `clearStatementPoolOnReturn` | `false` | 连接归还时是否清空其 Statement 池 | [15](#0-14) [16](#0-15) 
+| 参数                           | 默认值     | 说明                                                |                         |
+| ---------------------------- | ------- | ------------------------------------------------- | ----------------------- |
+| `poolPreparedStatements`     | `false` | 是否启用 PreparedStatement 池化（同时包含 CallableStatement） |                         |
+| `maxOpenPreparedStatements`  | 无限制     | Statement 池中最大同时开放的 Statement 数，负数表示无限制           |                         |
+| `clearStatementPoolOnReturn` | `false` | 连接归还时是否清空其 Statement 池                            | [15](#0-14) [16](#0-15) |
+|                              |         |                                                   |                         |
 
 ---
 
