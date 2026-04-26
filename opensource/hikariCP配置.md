@@ -86,10 +86,10 @@
 
 ## 八、线程与执行器
 
-| 配置项 | 类型 | 默认值 | 说明 |
-|---|---|---|---|
-| `threadFactory` | ThreadFactory | none（内部默认） | 创建池内所有线程的工厂（**仅编程方式**，用于受限容器环境） |
-| `scheduledExecutor` | ScheduledExecutorService | none（内部默认） | 用于内部定时任务的调度器（**仅编程方式**），建议设置 `setRemoveOnCancelPolicy(true)` | [14](#0-13) 
+| 配置项                 | 类型                       | 默认值        | 说明                                                           |             |
+| ------------------- | ------------------------ | ---------- | ------------------------------------------------------------ | ----------- |
+| `threadFactory`     | ThreadFactory            | none（内部默认） | 创建池内所有线程的工厂（**仅编程方式**，用于受限容器环境）                              |             |
+| `scheduledExecutor` | ScheduledExecutorService | none（内部默认） | 用于内部定时任务的调度器（**仅编程方式**），建议设置 `setRemoveOnCancelPolicy(true)` | [14](#0-13) |
 
 ---
 
