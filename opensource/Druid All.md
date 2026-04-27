@@ -202,7 +202,7 @@ PROP_SOCKET_TIMEOUT,
 
 | 配置项                                         | 类型      | 默认值   | 选择              | 说明                             |
 | ------------------------------------------- | ------- | ----- | --------------- | ------------------------------ |
-| `poolPreparedStatements`                    | boolean | false | ✅保持             | 是否开启 PreparedStatement 缓存      |
+| `poolPreparedStatements`                    | boolean | false | 🔄考虑默认关闭        | 是否开启 PreparedStatement 缓存      |
 | `sharePreparedStatements`                   | boolean | false | 🔒默认【会有全局同步锁代价】 | 是否在连接间共享 PreparedStatement     |
 | `maxPoolPreparedStatementPerConnectionSize` | int     | 10    | ✅保持50           | 每个连接最多缓存的 PreparedStatement 数量 |
 | `maxOpenPreparedStatements`                 | int     | -1    |                 | 同上（别名）                         |
@@ -218,6 +218,15 @@ PROP_SOCKET_TIMEOUT,
 	- 是，因为 sharePreparedStatements 在连接层级之上进一步提供了 `PreparedStatement`的缓存，进一步提升了 client 侧缓存的效果。
 ---
 
+preparedStatement池选择
+
+| 场景                          | 建议                   |
+| --------------------------- | -------------------- |
+| 普通 MySQL OLTP               | **Druid PSCache 关掉** |
+| 想优化 PreparedStatement 创建/解析 | 开 MySQL Driver 缓存    |
+| Oracle 场景                   | 可以考虑 Druid PSCache   |
+| SQL 模板很少、重复率极高、压测证明有效       | 可小规模开启 Druid PSCache |
+| SQL 很多、动态 SQL 多、分库分表多、连接数多  | 不建议开                 |
 ## 五、连接驱逐与保活配置（8 项）
 
 | 配置项                             | 类型      | 默认值           |             | 说明                                   |
