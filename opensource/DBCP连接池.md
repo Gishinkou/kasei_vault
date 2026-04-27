@@ -965,8 +965,7 @@ the parent connection.
     private boolean accessToUnderlyingConnectionAllowed;
 ```
 
-**File:** src/main/java/org/apache/commons/dbcp2/BasicDataSource.java (L340-342)
-```java
+233```java
     private String jmxName;
 
     private boolean registerConnectionMBean = true;
