@@ -243,26 +243,28 @@ preparedStatement池选择
 - DestroyTask定时维护空闲线程状态，包括【**一个任务**同时连接**驱逐和保活两部分**】，这是【一个定时任务】
 	- 保活配置（`keepAlive`）需要额外开启，开启后才会探活+重建连接
 - 决策流程：
-- ```
+
+  ```
   1. 物理连接是否太老？
    phyTimeoutMillis 命中 => close
 
-2. 物理连接使用次数是否太多？
-   phyMaxUseCount 命中 => close
-
-3. idle 是否超过 maxEvictableIdleTimeMillis？
-   命中 => 强制 close
-
-4. idle 是否超过 minEvictableIdleTimeMillis？
-   如果 idle 数量超过 minIdle => close
-   如果需要保留 minIdle 且 keepAlive=true => 探活保活
-
-5. idle 是否超过 keepAliveBetweenTimeMillis？
-   keepAlive=true 时，可能执行保活探测
-
-6. 都不满足
-   保留
+	1. 物理连接使用次数是否太多？
+	   phyMaxUseCount 命中 => close
+	
+	2. idle 是否超过 maxEvictableIdleTimeMillis？
+	   命中 => 强制 close
+	
+	3. idle 是否超过 minEvictableIdleTimeMillis？
+	   如果 idle 数量超过 minIdle => close
+	   如果需要保留 minIdle 且 keepAlive=true => 探活保活
+	
+	4. idle 是否超过 keepAliveBetweenTimeMillis？
+	   keepAlive=true 时，可能执行保活探测
+	
+	5. 都不满足
+	   保留
   ```
+  
 ---
 
 ## 六、超时配置（5 项）
