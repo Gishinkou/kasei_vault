@@ -322,13 +322,14 @@ JDBC MySQL connector 源码：https://raw.githubusercontent.com/mysql/mysql-conn
 
 ## 八、初始化与行为配置（5 项）
 
-| 配置项                         | 类型           | 默认值   | 选择                | 说明                        |
-| --------------------------- | ------------ | ----- | ----------------- | ------------------------- |
-| `asyncInit`                 | boolean      | false | 🔄考虑是否开启（等价于预热）   | 是否异步初始化连接                 |
-| `failFast`                  | boolean      | false | 🔄影响borrow链路是否做重试 | 连接失败时是否立即抛出异常（不等待）        |
-| `connectionInitSqls`        | List<String> | null  |                   | 连接创建后执行的初始化 SQL 列表        |
-| `filters`                   | String       | ""（空） |                   | 过滤器列表（逗号分隔，如 `stat,wall`） |
-| `killWhenSocketReadTimeout` | boolean      | false |                   | Socket 读超时时是否强制关闭连接       |
+| 配置项                         | 类型           | 默认值   | 选择                                   | 说明                                     |
+| --------------------------- | ------------ | ----- | ------------------------------------ | -------------------------------------- |
+| `asyncInit`                 | boolean      | false | 🔄【当前关闭】。考虑是否开启（等价于预热）               | 是否异步初始化连接                              |
+| `failFast`                  | boolean      | false | 🔄【当前开启】影响borrow链路是否做重试，可能导致上层业务失败变多 | 连接失败时是否立即抛出异常（不等待）                     |
+| `connectionInitSqls`        | List<String> | null  | 是用来调SET方法，做连接设置的                     | 连接创建后执行的初始化 SQL 列表                     |
+| `filters`                   | String       | ""（空） | 可插入逻辑                                | 过滤器列表（逗号分隔，内置了一些如 `stat性能统计,wall注入防护`） |
+| `killWhenSocketReadTimeout` | boolean      | false | 🔄可以考虑打开，但需要考虑库抖动情况                  | Socket 读超时时是否强制关闭连接                    |
+|                             |              |       |                                      |                                        |
 
 ---
 
