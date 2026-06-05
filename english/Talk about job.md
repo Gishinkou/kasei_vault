@@ -1,0 +1,4 @@
+- **keep up with the latest PC parts/hardware**：跟得上最新硬件信息
+- **figure out what works well together**：判断怎么搭配合理
+- **be out of the loop**：脱节了，不了解最新情况
+- **not confident doing that anymore**：现在不太有信心做这件事了
