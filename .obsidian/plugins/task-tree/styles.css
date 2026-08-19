@@ -1,0 +1,851 @@
+/* Task Tree — all styling lives here (no inline styles except dynamic values),
+   built on Obsidian CSS variables so themes and snippets can override it. */
+
+.tt-view {
+	padding: 0;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+.tt-scroll {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow: auto;
+}
+
+/* ---- toolbar ---- */
+.tt-toolbar {
+	flex: 0 0 auto;
+	z-index: 5;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 8px 12px;
+	background: var(--background-primary);
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+.tt-toolbar-title {
+	font-weight: 600;
+	font-size: var(--font-ui-medium);
+}
+.tt-toolbar-title.is-clickable {
+	cursor: pointer;
+	border-radius: var(--radius-s);
+	padding: 2px 6px;
+	margin: -2px -6px;
+}
+.tt-toolbar-title.is-clickable:hover {
+	background: var(--background-modifier-hover);
+}
+.tt-toolbar-actions {
+	display: flex;
+	gap: 6px;
+}
+.tt-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 10px;
+	border-radius: var(--radius-s);
+	border: 1px solid var(--background-modifier-border);
+	background: var(--background-secondary);
+	color: var(--text-normal);
+	cursor: pointer;
+	font-size: var(--font-ui-small);
+}
+.tt-btn:hover {
+	background: var(--background-modifier-hover);
+}
+.tt-btn-cta {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	border-color: transparent;
+}
+
+/* ---- kanban ---- */
+.tt-kanban {
+	display: flex;
+	gap: 12px;
+	align-items: flex-start;
+	padding: 12px;
+}
+.tt-column {
+	flex: 0 0 272px;
+	max-width: 272px;
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	display: flex;
+	flex-direction: column;
+	max-height: 100%;
+}
+.tt-column-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px 10px;
+	font-weight: 600;
+	border-bottom: 1px solid var(--background-modifier-border);
+	border-top: 3px solid var(--tt-col-color, var(--interactive-accent));
+	border-top-left-radius: var(--radius-m);
+	border-top-right-radius: var(--radius-m);
+}
+.tt-column-count {
+	color: var(--text-muted);
+	font-weight: 500;
+	font-size: var(--font-ui-smaller);
+	background: var(--background-modifier-border);
+	border-radius: 10px;
+	padding: 0 8px;
+}
+.tt-column-count.tt-wip-over {
+	color: var(--text-on-accent);
+	background: var(--text-error);
+}
+.tt-column-cards {
+	padding: 8px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	overflow-y: auto;
+	min-height: 40px;
+}
+.tt-card {
+	background: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	padding: 8px 10px;
+	cursor: pointer;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+.tt-card:hover {
+	border-color: var(--interactive-accent);
+}
+.tt-card-main {
+	display: flex;
+}
+.tt-card-text {
+	font-size: var(--font-ui-small);
+	line-height: 1.35;
+}
+.tt-breadcrumb {
+	display: block;
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+	margin-bottom: 3px;
+}
+.tt-card-meta {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 6px;
+}
+.tt-parent-tag {
+	font-size: var(--font-ui-smaller);
+	color: var(--text-faint);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 8px;
+	padding: 0 6px;
+}
+.tt-ghost {
+	opacity: 0.5;
+}
+
+/* ---- drag onto a task to nest it (native drag-and-drop) ---- */
+.tt-dragging {
+	opacity: 0.4;
+}
+/* release in the MIDDLE of a task → nest as its child */
+.tt-drop-inside {
+	outline: 2px solid var(--interactive-accent);
+	outline-offset: -2px;
+	border-radius: var(--radius-s);
+	background: var(--background-modifier-hover);
+}
+/* release near the TOP / BOTTOM edge → reorder above / below, same level */
+.tt-drop-before {
+	box-shadow: inset 0 2px 0 0 var(--interactive-accent);
+}
+.tt-drop-after {
+	box-shadow: inset 0 -2px 0 0 var(--interactive-accent);
+}
+
+/* ---- tree ---- */
+.tt-tree {
+	padding: 8px 12px 32px;
+}
+.tt-tree-list {
+	list-style: none;
+	margin: 0;
+	padding-left: 20px;
+}
+.tt-root-list {
+	padding-left: 4px;
+	/* Keep chips and hover actions within eye- and mouse-reach of the text on wide
+	   panes — an uncapped row pins them to the far window edge (proximity + Fitts). */
+	max-width: 920px;
+}
+.tt-node {
+	position: relative;
+}
+.tt-row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 3px 4px;
+	border-radius: var(--radius-s);
+}
+.tt-row:hover {
+	background: var(--background-modifier-hover);
+}
+.tt-toggle {
+	display: inline-flex;
+	width: 16px;
+	height: 16px;
+	color: var(--text-muted);
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+.tt-toggle-empty {
+	width: 16px;
+	flex: 0 0 auto;
+}
+.tt-checkbox {
+	margin: 0;
+	flex: 0 0 auto;
+}
+.tt-node-text {
+	cursor: pointer;
+	font-size: var(--font-ui-small);
+}
+/* Markdown-rendered task text: keep block elements inline so a card stays one line-box. */
+.tt-md p,
+.tt-md h1,
+.tt-md h2,
+.tt-md h3,
+.tt-md h4,
+.tt-md h5,
+.tt-md h6 {
+	display: inline;
+	margin: 0;
+	font-size: inherit;
+	font-weight: inherit;
+	line-height: inherit;
+}
+.tt-md ul,
+.tt-md ol {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+.tt-md.tt-done a,
+.tt-md.tt-done .tag {
+	color: inherit;
+}
+.tt-node-text.tt-done {
+	color: var(--text-muted);
+	text-decoration: line-through;
+}
+.tt-inline-input {
+	flex: 1 1 auto;
+	min-width: 140px;
+	box-sizing: border-box;
+	font-family: inherit;
+	font-size: var(--font-ui-small);
+	color: var(--text-normal);
+	background: var(--background-primary);
+	border: 1px solid var(--interactive-accent);
+	border-radius: var(--radius-s);
+	padding: 1px 5px;
+	margin: -1px 0;
+}
+.tt-node-meta {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-left: auto;
+}
+.tt-focus-btn,
+.tt-row-btn {
+	display: inline-flex;
+	color: var(--text-faint);
+	cursor: pointer;
+	opacity: 0;
+	transition: opacity 80ms ease;
+}
+.tt-node-body:hover .tt-focus-btn,
+.tt-node-body:hover .tt-row-btn,
+.tt-card:hover .tt-row-btn {
+	opacity: 0.75;
+}
+/* A task that HAS a note keeps its file icon faintly visible — the hidden [[link]]
+   still announces itself without repeating the title. */
+.tt-note-btn.has-note {
+	opacity: 0.45;
+	color: var(--interactive-accent);
+}
+.tt-focus-btn:hover,
+.tt-row-btn:hover {
+	opacity: 1;
+	color: var(--text-normal);
+}
+.tt-del-btn:hover {
+	color: var(--text-error);
+}
+.tt-focus-btn svg,
+.tt-row-btn svg {
+	width: 14px;
+	height: 14px;
+}
+
+/* ---- focus bar ---- */
+.tt-focus-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 8px;
+	padding: 6px 4px;
+	border-bottom: 1px dashed var(--background-modifier-border);
+}
+.tt-focus-sep {
+	color: var(--text-faint);
+}
+.tt-focus-crumb {
+	color: var(--text-accent);
+	cursor: pointer;
+}
+.tt-focus-current {
+	font-weight: 600;
+}
+
+/* ---- shared chips / badges ---- */
+.tt-chip {
+	font-size: var(--font-ui-smaller);
+	padding: 0 7px;
+	border-radius: 9px;
+	color: var(--text-on-accent);
+	background: var(--tt-chip-color, var(--interactive-accent));
+	white-space: nowrap;
+}
+.tt-chip[data-role="todo"] {
+	background: var(--tt-chip-color, var(--background-modifier-border));
+	color: var(--text-muted);
+}
+.tt-chip[data-role="done"] {
+	background: var(--tt-chip-color, var(--color-green, #3aa675));
+}
+.tt-chip[data-role="doing"] {
+	background: var(--tt-chip-color, var(--color-yellow, #c99a2e));
+}
+.tt-chip[data-role="blocked"] {
+	background: var(--tt-chip-color, var(--color-red, #c0392b));
+}
+.tt-chip[data-role="cancelled"] {
+	background: var(--tt-chip-color, var(--background-modifier-border));
+	color: var(--text-faint);
+	text-decoration: line-through;
+}
+.tt-progress {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+.tt-progress-text {
+	font-size: var(--font-ui-smaller);
+	color: var(--text-muted);
+	font-variant-numeric: tabular-nums;
+}
+.tt-progress-bar {
+	width: 44px;
+	height: 5px;
+	border-radius: 3px;
+	background: var(--background-modifier-border);
+	overflow: hidden;
+}
+.tt-progress-fill {
+	height: 100%;
+	background: var(--interactive-accent);
+}
+.tt-override-badge {
+	display: inline-flex;
+	color: var(--text-accent);
+}
+.tt-override-badge svg {
+	width: 13px;
+	height: 13px;
+}
+
+/* ---- placeholders ---- */
+.tt-placeholder {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	text-align: center;
+	height: 100%;
+	padding: 40px;
+	color: var(--text-muted);
+}
+.tt-placeholder-icon {
+	color: var(--text-faint);
+}
+.tt-placeholder-icon svg {
+	width: 40px;
+	height: 40px;
+}
+.tt-placeholder-actions {
+	display: flex;
+	gap: 8px;
+	margin-top: 4px;
+}
+
+/* ---- settings ---- */
+.tt-column-row .tt-status-input {
+	width: 3ch;
+	text-align: center;
+}
+.tt-column-row .tt-wip-input {
+	width: 6ch;
+	text-align: center;
+}
+.tt-settings-warning {
+	color: var(--text-error);
+	font-size: var(--font-ui-smaller);
+	margin: 4px 0 10px;
+}
+
+/* ---- shared row body (all layouts) ---- */
+.tt-node-body {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.tt-drag-handle {
+	display: inline-flex;
+	flex: 0 0 auto;
+	color: var(--text-faint);
+	cursor: grab;
+	opacity: 0;
+	transition: opacity 80ms ease;
+}
+.tt-node-body:hover .tt-drag-handle {
+	opacity: 0.55;
+}
+.tt-drag-handle:hover {
+	opacity: 1;
+}
+.tt-drag-handle:active {
+	cursor: grabbing;
+}
+.tt-drag-handle svg {
+	width: 14px;
+	height: 14px;
+}
+.tt-toggle-drill {
+	color: var(--text-faint);
+}
+.tt-warn {
+	display: inline-flex;
+	color: var(--color-orange, #c9760a);
+}
+.tt-warn svg {
+	width: 14px;
+	height: 14px;
+}
+
+/* ---- toolbar: layout switch ---- */
+.tt-layout-switch {
+	display: inline-flex;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	overflow: hidden;
+}
+.tt-layout-btn {
+	display: inline-flex;
+	align-items: center;
+	padding: 4px 8px;
+	background: var(--background-secondary);
+	border: none;
+	border-right: 1px solid var(--background-modifier-border);
+	color: var(--text-muted);
+	cursor: pointer;
+	box-shadow: none;
+}
+.tt-layout-btn:last-child {
+	border-right: none;
+}
+.tt-layout-btn.is-active {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+.tt-layout-btn svg {
+	width: 16px;
+	height: 16px;
+}
+.tt-flip-btn {
+	margin-left: 8px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+}
+
+/* ---- dashboard header ---- */
+.tt-dash-header {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding: 8px 12px;
+	border-bottom: 1px solid var(--background-modifier-border);
+	background: var(--background-primary);
+}
+.tt-dash-titlerow {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.tt-dash-title {
+	margin: 0;
+	font-size: var(--font-ui-medium);
+	font-weight: 600;
+	cursor: text;
+}
+h2.tt-dash-title {
+	font-size: var(--font-ui-large);
+}
+.tt-dash-stats {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+.tt-stat {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 4px;
+	padding: 2px 8px;
+	border-radius: 10px;
+	background: var(--background-secondary);
+	font-size: var(--font-ui-smaller);
+}
+.tt-stat-n {
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+.tt-stat-l {
+	color: var(--text-muted);
+}
+.tt-stat[data-role="doing"] .tt-stat-n {
+	color: var(--color-yellow, #c99a2e);
+}
+.tt-stat[data-role="done"] .tt-stat-n {
+	color: var(--color-green, #3aa675);
+}
+.tt-stat[data-role="blocked"] .tt-stat-n {
+	color: var(--color-red, #c0392b);
+}
+.tt-stat-progress {
+	background: transparent;
+	border: 1px solid var(--background-modifier-border);
+}
+.tt-dash-blocked {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	margin-left: auto;
+	padding: 2px 8px;
+	border-radius: 10px;
+	color: var(--text-on-accent);
+	background: var(--color-red, #c0392b);
+	font-size: var(--font-ui-smaller);
+}
+.tt-dash-blocked.is-clickable {
+	cursor: pointer;
+}
+.tt-dash-blocked svg {
+	width: 14px;
+	height: 14px;
+}
+
+/* ---- blockers / next-up panel ---- */
+.tt-panel {
+	flex: 0 0 auto;
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+	padding: 10px 12px;
+	border-bottom: 1px solid var(--background-modifier-border);
+	background: var(--background-secondary);
+}
+.tt-panel-sec {
+	flex: 1 1 260px;
+	min-width: 220px;
+}
+.tt-panel-title {
+	font-weight: 600;
+	font-size: var(--font-ui-smaller);
+	color: var(--text-muted);
+	margin-bottom: 4px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+.tt-panel-empty {
+	color: var(--text-faint);
+	font-size: var(--font-ui-small);
+}
+.tt-panel-item {
+	padding: 4px 6px;
+	border-radius: var(--radius-s);
+	border-left: 3px solid var(--background-modifier-border);
+	cursor: pointer;
+	margin-bottom: 4px;
+}
+.tt-panel-item:hover {
+	background: var(--background-modifier-hover);
+}
+.tt-panel-item[data-role="blocked"] {
+	border-left-color: var(--color-red, #c0392b);
+}
+.tt-panel-item[data-role="doing"] {
+	border-left-color: var(--color-yellow, #c99a2e);
+}
+.tt-panel-item-text {
+	font-size: var(--font-ui-small);
+}
+
+/* ---- diagram layout ---- */
+.tt-diagram {
+	position: relative;
+	display: inline-flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 8px 4px;
+}
+/* Dependency overlay: dashed curves over the diagram, visually distinct from the
+   solid hierarchy connectors. Pointer-events off so nodes stay interactive. */
+.tt-dep-svg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	pointer-events: none;
+	z-index: 4;
+	overflow: visible;
+}
+.tt-dep-edge {
+	fill: none;
+	stroke: var(--text-faint);
+	stroke-width: 1.5;
+	stroke-dasharray: 5 4;
+}
+.tt-dep-edge.is-held {
+	stroke: var(--color-red);
+}
+.tt-dep-edge.is-cycle {
+	stroke: var(--color-orange);
+	stroke-dasharray: 2 3;
+}
+.tt-dep-dot {
+	fill: var(--text-faint);
+}
+.tt-dep-dot.is-held {
+	fill: var(--color-red);
+}
+/* Dependency badge on cards / nodes. */
+.tt-dep-badge {
+	display: inline-flex;
+	align-items: center;
+	color: var(--text-faint);
+}
+.tt-dep-badge svg {
+	width: 12px;
+	height: 12px;
+}
+.tt-dep-badge.tt-dep-held {
+	color: var(--color-red);
+}
+.tt-dep-badge.tt-dep-warn {
+	color: var(--color-orange);
+}
+.tt-dnode {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+.tt-dbox {
+	flex: 0 0 auto;
+	padding: 5px 9px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	background: var(--background-secondary);
+	/* Long titles wrap inside a bounded box instead of stretching the whole diagram;
+	   width: max-content stops the flex row from squeezing parents to slivers. */
+	width: max-content;
+	max-width: 480px;
+	white-space: normal;
+}
+.tt-dbox .tt-node-text {
+	min-width: 0;
+}
+.tt-dchildren {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 8px;
+	padding-left: var(--tt-connector, 28px);
+	position: relative;
+	flex-shrink: 0; /* the child column never squeezes its parent's box */
+}
+.tt-dchildren::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: calc(var(--tt-connector, 28px) / 2);
+	border-top: 1px solid var(--background-modifier-border);
+}
+.tt-dchildren > .tt-dnode {
+	position: relative;
+}
+.tt-dchildren > .tt-dnode::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: 100%;
+	width: calc(var(--tt-connector, 28px) / 2);
+	border-top: 1px solid var(--background-modifier-border);
+}
+.tt-dchildren > .tt-dnode::after {
+	content: "";
+	position: absolute;
+	right: 100%;
+	top: 0;
+	height: 100%;
+	width: calc(var(--tt-connector, 28px) / 2);
+	border-left: 1px solid var(--background-modifier-border);
+}
+.tt-dchildren > .tt-dnode:first-child::after {
+	top: 50%;
+	height: 50%;
+}
+.tt-dchildren > .tt-dnode:last-child::after {
+	top: 0;
+	height: 50%;
+}
+.tt-dchildren > .tt-dnode:only-child::after {
+	display: none;
+}
+
+/* ---- inverted diagram: the goal sits on the right, enablers flow into it ---- */
+/* Mirror the whole canvas, then un-mirror each box so the text still reads L→R. */
+.tt-diagram.is-inverted {
+	transform: scaleX(-1);
+}
+.tt-diagram.is-inverted .tt-dbox {
+	transform: scaleX(-1);
+}
+
+/* ---- the project goal apex (= the note) ---- */
+.tt-goal-box {
+	border-color: var(--interactive-accent);
+	border-width: 1.5px;
+	background: var(--background-primary);
+}
+.tt-goal-text {
+	font-weight: 700;
+	cursor: text;
+}
+
+/* ---- columns layout ---- */
+.tt-columns {
+	display: flex;
+	align-items: stretch;
+	height: 100%;
+}
+/* inverted: the goal pane is moved to the right by reversing DOM order in JS
+   (renderColumns), NOT via flex-direction: row-reverse, which would overflow
+   unreachably to the left inside the horizontal scroll container. */
+.tt-column-pane {
+	flex: 0 0 300px;
+	display: flex;
+	flex-direction: column;
+	border-right: 1px solid var(--background-modifier-border);
+	max-height: 100%;
+}
+.tt-column-pane:last-child {
+	border-right: none;
+}
+.tt-column-pane-head {
+	padding: 6px 10px;
+	font-weight: 600;
+	font-size: var(--font-ui-smaller);
+	color: var(--text-muted);
+	border-bottom: 1px solid var(--background-modifier-border);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.tt-column-pane-body {
+	overflow-y: auto;
+	padding: 4px;
+}
+/* Miller columns: every row is exactly one line — the text ellipsizes (drilling in
+   shows the children anyway), so grips, checkboxes and chips always line up. */
+.tt-col-item {
+	padding: 4px 6px;
+	border-radius: var(--radius-s);
+	cursor: pointer;
+	min-width: 0;
+	overflow: hidden;
+}
+.tt-col-item .tt-node-text {
+	flex: 1 1 auto;
+	min-width: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.tt-col-item .tt-node-meta {
+	flex: 0 0 auto;
+}
+.tt-col-item:hover {
+	background: var(--background-modifier-hover);
+}
+.tt-col-item.is-selected {
+	background: var(--background-modifier-active-hover, var(--background-modifier-hover));
+}
+
+/* ---- full focus ---- */
+.tt-fullfocus .tt-tree-list,
+.tt-fullfocus .tt-diagram,
+.tt-fullfocus .tt-focus-bar,
+.tt-fullfocus-header {
+	max-width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.tt-fullfocus .tt-node-text {
+	font-size: var(--font-ui-medium);
+}
+.tt-fullfocus-header {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 24px 12px 8px;
+}
+.tt-fullfocus-title {
+	margin: 0;
+}
+
+/* ---- a droppable tail so a task can be dropped at the END of a branch ---- */
+.tt-tree-list,
+.tt-dchildren,
+.tt-column-pane-body {
+	padding-bottom: 8px;
+}
+.tt-diagram {
+	padding-bottom: 16px;
+}

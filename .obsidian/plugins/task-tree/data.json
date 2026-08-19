@@ -1,0 +1,39 @@
+{
+  "columns": [
+    {
+      "id": "todo",
+      "name": "To Do",
+      "status": " ",
+      "role": "todo"
+    },
+    {
+      "id": "doing",
+      "name": "Doing",
+      "status": "/",
+      "role": "doing"
+    },
+    {
+      "id": "done",
+      "name": "Done",
+      "status": "x",
+      "role": "done"
+    }
+  ],
+  "unknownRole": "doing",
+  "blockedDominates": true,
+  "indentType": "tabs",
+  "indentSize": 4,
+  "idPrefix": "t-",
+  "idLength": 6,
+  "autoAssignIds": true,
+  "parentAutoSync": false,
+  "maintainTimestamp": false,
+  "treeLayout": "list",
+  "showBoardStats": false,
+  "taskNoteFolder": "",
+  "newBoardFolder": "",
+  "updateTaskNoteFrontmatter": true,
+  "showTaskNoteLink": false,
+  "checkboxCycles": false,
+  "agentInstructions": "on"
+}
