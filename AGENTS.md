@@ -141,3 +141,13 @@ Each line below must parse to exactly the annotated fields (asserted in `tests/r
 → `status="/"` · `text="Both"` · `override="blocked"` · `blockedBy=["t-a"]` · `id="t-4"`
 
 <!-- task-tree:agents:end -->
+
+# Portable Task Tree workflow
+
+When a request involves creating, decomposing, installing, diagnosing, or substantially editing
+Task Tree content, use the repository skill at `.agents/skills/task-tree/SKILL.md` when the agent
+supports Skills. Agents without Skill discovery must still follow the generated contract above.
+Run `.agents/skills/task-tree/scripts/validate_board.py` after writing a board. The repository
+tracks the Obsidian plugin and activation state, but file presence does not prove that Obsidian has
+loaded it; use `.agents/skills/task-tree/scripts/setup_task_tree.py check` to distinguish those
+states.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Tree"
+  short_description: "Create and maintain Obsidian Task Tree boards safely"
+  default_prompt: "Use $task-tree to turn this goal into a concise, executable Task Tree board."
