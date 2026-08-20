@@ -13,10 +13,11 @@ Read this file completely before modifying an existing board.
 ## Task grammar
 
 ```text
-<indent><marker> [<status>] <text> [tt-override:: <role>]? [tt-blocked-by:: <id>, <id>…]? [[task note]]? ^<id>?
+<indent><marker> [<status>] <text> [tt-override:: <role>]? [tt-blocked-by:: <id>, <id>…]? ^<id>?
 ```
 
-The task note, when present, is the trailing wikilink in task text. Preserve it when renaming or moving a task.
+The task note, when present, is the trailing wikilink within human-readable task text, before
+reserved fields and the block id. Preserve it when renaming or moving a task.
 
 | Piece | Recognition rule |
 | --- | --- |
@@ -89,4 +90,3 @@ Also flag missing target ids and dependency cycles. Dependencies do not change t
 - [ ] Announce [tt-blocked-by:: t-qa, t-copy] ^t-3
 - [/] Both [tt-blocked-by:: t-a] [tt-override:: blocked] ^t-4
 ```
-

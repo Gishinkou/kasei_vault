@@ -11,6 +11,7 @@ import re
 
 TASK = re.compile(r"^(?P<indent>\s*)(?P<marker>[-*+])\s+\[(?P<status>.)\]\s?(?P<body>.*)$")
 ID = re.compile(r"\s+\^(?P<id>[A-Za-z0-9-]+)\s*$")
+ID_ANYWHERE = re.compile(r"(?:^|\s)\^(?P<id>[A-Za-z0-9-]+)(?=\s|$)")
 BLOCKED_BY = re.compile(r"\[tt-blocked-by::\s*(?P<ids>[^\]]*)\]")
 RESERVED = re.compile(r"\[tt-(?P<name>[A-Za-z0-9-]+)::")
 
@@ -60,6 +61,11 @@ def validate(path: Path) -> tuple[list[str], list[str]]:
         body = match.group("body")
         id_match = ID.search(body)
         task_id = id_match.group("id") if id_match else None
+        loose_ids = list(ID_ANYWHERE.finditer(body))
+        if loose_ids and not id_match:
+            errors.append(f"line {number}: block id must be the final field")
+        if len(loose_ids) > 1:
+            errors.append(f"line {number}: multiple block ids")
         if task_id:
             id_lines[task_id].append(number)
         reserved = RESERVED.findall(body)
@@ -139,4 +145,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

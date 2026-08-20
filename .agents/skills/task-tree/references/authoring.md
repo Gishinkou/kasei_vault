@@ -51,4 +51,3 @@ title: MySQL 8 升级风险
 When the user asks to create, generate, add, break down, or update tasks, write the board directly. Use a preview only when the user asks for one or when the target file cannot be determined safely. For ambiguity that does not materially alter the project, make the most conservative useful assumption and state it in the handoff.
 
 Before writing a new board, search the intended folder for naming and frontmatter conventions. Do not overwrite an existing note. After writing, run the board validator and tell the user that ids and task-note metadata will appear only after Obsidian with Task Tree enabled processes the board.
-

@@ -5,7 +5,7 @@
 ## 0. 本仓库的最短路径
 
 这个 Vault 已把 Task Tree 插件文件、启用配置、Agent Skill 和格式契约一起纳入 Git。
-完整 checkout 后，先在仓库任意子目录运行：
+完整 checkout 后，先在仓库根目录运行：
 
 ```bash
 python3 .agents/skills/task-tree/scripts/setup_task_tree.py check

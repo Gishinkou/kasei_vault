@@ -157,11 +157,13 @@ def check(vault: Path) -> int:
 
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description=__doc__)
-    result.add_argument("--vault", help="vault path or a path inside it")
     commands = result.add_subparsers(dest="command", required=True)
-    commands.add_parser("check", help="report setup state without writing")
-    commands.add_parser("enable", help="add task-tree to community-plugins.json")
+    check_parser = commands.add_parser("check", help="report setup state without writing")
+    check_parser.add_argument("--vault", help="vault path or a path inside it")
+    enable_parser = commands.add_parser("enable", help="add task-tree to community-plugins.json")
+    enable_parser.add_argument("--vault", help="vault path or a path inside it")
     install_parser = commands.add_parser("install", help="install a pinned GitHub release")
+    install_parser.add_argument("--vault", help="vault path or a path inside it")
     install_parser.add_argument("--version", default="1.0.0", help="GitHub release tag")
     install_parser.add_argument("--force", action="store_true", help="replace another installed version")
     install_parser.add_argument("--no-enable", action="store_true", help="install without enabling")
@@ -186,4 +188,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

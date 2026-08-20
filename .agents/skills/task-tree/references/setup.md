@@ -16,13 +16,15 @@ Therefore a complete Git checkout normally contains both the Obsidian plugin and
 
 ## Diagnose first
 
-From anywhere inside the vault, run:
+From the vault root, run:
 
 ```bash
 python3 .agents/skills/task-tree/scripts/setup_task_tree.py check
 ```
 
-When the current directory is uncertain, pass `--vault /absolute/path/to/vault`. The command is read-only and reports these states separately:
+When the current directory is uncertain, use
+`setup_task_tree.py check --vault /absolute/path/to/vault`. The command is read-only and reports
+these states separately:
 
 - plugin files installed;
 - plugin id enabled in `community-plugins.json`;
@@ -66,4 +68,3 @@ Do not install BRAT when the community release or the tracked plugin files alrea
 | Obsidian, plugin files disabled | Same Markdown operations | Plugin commands and reconciliation do not run |
 | Obsidian with Task Tree enabled | Full board UI and commands | Restart/reload may still be needed after file changes |
 | Partial checkout without `.obsidian` | Agent skill may still guide Markdown authoring | Cannot install into a vault until its root is known |
-
