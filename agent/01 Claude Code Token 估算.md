@@ -75,7 +75,7 @@ After /compact
 压缩率约41%
 
 ## Agent Loop
-![[agentloop.png]]
+![[attachments/Claude Code Agent Loop.png]]
 
 agent 办事包括
 - 收集环境
