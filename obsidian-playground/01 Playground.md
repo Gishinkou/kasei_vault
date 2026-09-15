@@ -1,6 +1,6 @@
 ---
 type: task-tree
-title: playground
+title: 01 Playground
 ---
 
 - [ ] First task ^t-jja59t

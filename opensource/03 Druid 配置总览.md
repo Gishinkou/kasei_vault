@@ -328,7 +328,7 @@ JDBC MySQL connector 源码：https://raw.githubusercontent.com/mysql/mysql-conn
 - 调用时机：
 	- `eviction定时任务`
 	- `borrow`时同步触发
-![[Pasted image 20260423155411.png|278]]
+![[attachments/Druid 配置示意图.png|278]]
 ---
 
 ## 八、初始化与行为配置（5 项）
