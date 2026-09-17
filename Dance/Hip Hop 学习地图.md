@@ -281,3 +281,45 @@ hip hop freestyle beginner drill
 5. 用短 combo、换歌和 2×8 freestyle 做 **Application** 检验。
 
 如果课堂常用 jazzy、neo soul 或 R&B 音乐，可以把 **Rhythm / Groove → Musicality** 这条线放在“积累大量动作名”之前。最终想获得的不是固定大纲，而是一种能力：无论换哪位老师、哪首歌，都能看出课堂内容在这张地图里的位置。
+
+## 八、Bounce、Groove 与风格关系
+
+### Bounce 不是一个孤立动作
+
+在这张地图里，**bounce 是 groove 的一种基础身体组织方式**：拍子持续经过膝盖、重心和躯干，形成可继续移动、叠加动作的底层律动。只在某一拍“蹲一下”是动作外形；能在换脚、移动、转向时保持脉冲，才更接近 groove。
+
+可以用这条线检查：
+
+```text
+听见 pulse
+→ 身体持续响应
+→ 重心真正换过去
+→ 动作叠上去时律动不断
+→ 根据音乐改变 timing 与 texture
+```
+
+因此，**groove 比 bounce 更上位**：bounce 是形成 groove 的常见入口，但 groove 还包括 rock、timing、weight shift、pocket，以及身体对具体音乐质感的持续回应。
+
+### Neo Soul、R&B、Jazz 与 Hip Hop 不宜画成树状分类
+
+对舞蹈学习更有用的不是争论一首歌“到底属于哪一类”，而是看不同传统给听感和身体反应带来了什么：
+
+| 音乐线索 | 对听感与舞动的启发 |
+|---|---|
+| Jazz | 和声色彩、乐器互动、切分和即兴语言 |
+| Soul / R&B | 人声表达、backbeat、bass 与整体 pocket |
+| Funk | 更明确的重音、循环与身体驱动力 |
+| Hip Hop | beat、采样、flow，以及对既有音乐材料的重新组织 |
+| Neo Soul | 常把 Soul / R&B 的表达与 Jazz 和声、Hip Hop beat、laid-back timing 放在一起 |
+
+这些不是互斥标签，而是彼此长期影响的音乐语言。练习时可以从“分类”切换到三个更有操作性的问题：
+
+1. 我现在跟的是 kick / snare、bass、vocal，还是 melody / chord？
+2. 身体是在拍点正中、略靠前，还是落在拍后形成 laid-back 的 pocket？
+3. 这首歌需要更重、更弹、更松，还是更流动的 texture？
+
+[[reading/Hoshino Gen|星野源]]是一个可用于练习这种听法的例子：作品仍以 J-Pop 为落点，但能听见 Soul、R&B、Funk、Jazz 与 Hip Hop 的语言。此处的价值不是给艺人贴唯一 genre，而是训练自己从编曲、节奏和身体反应中辨认影响来源。
+
+### 我的学习观察
+
+> 课堂内容和老师会变化，我缺的不是另一份固定课程表，而是一根稳定的认知轴。以后遇到 jazzy、Neo Soul 或 R&B 倾向的课堂，优先观察 **groove → musicality**，再记录动作名。

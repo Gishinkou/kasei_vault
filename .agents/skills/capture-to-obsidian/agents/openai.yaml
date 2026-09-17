@@ -1,0 +1,4 @@
+interface:
+  display_name: "Capture to Obsidian"
+  short_description: "Turn conversations into connected Obsidian knowledge notes"
+  default_prompt: "Use $capture-to-obsidian to turn this discussion into connected notes in this vault."

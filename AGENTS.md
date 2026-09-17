@@ -151,3 +151,26 @@ Run `.agents/skills/task-tree/scripts/validate_board.py` after writing a board. 
 tracks the Obsidian plugin and activation state, but file presence does not prove that Obsidian has
 loaded it; use `.agents/skills/task-tree/scripts/setup_task_tree.py check` to distinguish those
 states.
+
+# Knowledge capture in this vault
+
+When the user says “记一下”, “落个笔记”, “写进 Obsidian”, or otherwise asks to preserve the
+current discussion as knowledge, use `.agents/skills/capture-to-obsidian/SKILL.md`.
+
+- Treat the conversation as source material, not as the note's final structure. Extract reusable
+  concepts, relationships, the user's own observations, open questions, and useful sources.
+- Search the whole vault before writing. Prefer a focused update to an existing note; create a new
+  note only when the topic is independently useful and has no natural home.
+- Follow the surrounding folder, title, heading, frontmatter, and wikilink style. This vault does
+  not require frontmatter on ordinary notes, so do not add it merely for consistency.
+- Use a small number of meaningful `[[wikilinks]]` to existing notes. Do not manufacture empty
+  notes or dense link graphs. A link should express a real relationship visible from its context.
+- Keep externally checkable facts and sources separate from sections labelled as the user's
+  observation, interpretation, question, or working hypothesis. Do not turn an inference into a
+  fact.
+- Preserve useful source URLs. A ChatGPT conversation link may document provenance, but is not a
+  substitute for an authoritative source when factual claims matter.
+- Avoid mass moves, renames, taxonomy changes, or automatic merges. Report candidate cleanup
+  separately for the user to decide.
+- Do not modify Task Tree structure or plugin-managed fields during ordinary knowledge capture.
+- Finish by reporting files created/updated and the append/merge/create choice made for each.
